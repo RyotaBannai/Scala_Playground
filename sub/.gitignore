@@ -1,4 +1,5 @@
 .idea
+out/
 target/
 target/streams/_global/_global/checkBuildSources/_global/inputFileStamps/previous
 target/streams/compile/console/_global/streams/out

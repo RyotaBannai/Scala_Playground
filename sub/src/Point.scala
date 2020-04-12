@@ -1,10 +1,10 @@
 // class Point (_x: Int, _y: Int){}
 
-class Point (val x:Int, val y:Int) { //コンストラクタ引数の定義をした場合 var でも可
+// class Point (val x:Int, val y:Int) { //コンストラクタ引数の定義をした場合 var でも可
+class Point (val x:Int, val y:Int){ // 同名のobject で applyを使った場合
   def +(p:Point): Point = {
     new Point(x + p.x, y + p.y)//自分のx, yに直接アクセルできる　p1 + p2　この関数はこんな感じでつかう
   }
-
   override def toString: String =  "(" + x + ", " + y + ")"
 }
 //・これをプライマリコンストラクタという。あまり使わないがscalaでは複数のコンストラクタを宣言できる。
@@ -16,6 +16,9 @@ class Adder{
 }
 
 object Point {
+  // ユーティリティメソッドやグローバルな状態の置き場所（Javaで言うstaticメソッドやフィールド）
+  def apply(x: Int, y: Int): Point = new Point(x, y)
+  def printPoint(p: Point) = println(p.x + ", " + p.y)
   def main(args: Array[String]): Unit = {
     val adder = new Adder()
     adder.add(2)(3)

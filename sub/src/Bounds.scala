@@ -20,10 +20,10 @@ class Bounds [A <: Show, B <: Show](val a: A, val b: B) extends Show
 
 // 下限境界（lower bounds）: 型パラメータがどのような型のスーパータイプであるかを指定する
 // 共変パラメータと共に用いることが多い機能
-abstract class Stack[+A]{
-  def push[E >: A](element: E): Stack[E]
+abstract class Stacks[+A]{
+  def push[E >: A](element: E): Stacks[E]
   def top: A
-  def pop: Stack[A]
+  def pop: Stacks[A]
   def isEmpty: Boolean
 }
 

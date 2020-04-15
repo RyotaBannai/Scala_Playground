@@ -9,27 +9,27 @@ object Readfile {
   def main(args: Array[String]): Unit={
     val fileName = new File(".").getCanonicalPath+"/src/Fn.scala"
     // val fileName = System.getProperty("user.dir")+"/src/Fn.scala"
-    val buffs = Source.fromFile(fileName)
     around(
-      () => println("ファイルを開く"),
-      printFile(buffs),
       () => {
-        println("ファイルを閉じる")
-        buffs.close
-      }
+        println("ファイルを開く")
+        Source.fromFile(fileName)
+      },
+      printFile,
+      () => println("ファイルを閉じる")
     )
   }
-  def printFile(buff: Source): Unit = {
-    for (line <- buff.getLines()){
+  def printFile(buffs: Source): Unit = {
+    for (line <- buffs.getLines()){
       println(line)
     }
   }
-  def around(init: () => Unit, body: Unit, fin: () => Unit): Any = {
-    init()
+  def around(init: () => Source, body: Source => Unit, fin: () => Unit): Any = {
+    val buffs: Source = init()
     try {
-      body
+      body(buffs)
     } finally {
       fin()
+      buffs.close
     }
   }
 }

@@ -233,3 +233,6 @@ var pair: Pair[AnyRef, AnyRef] = new Pair[String, String]("foo","bar")
 - `Nothing`は全ての型のサブクラスであるような型を表現する。`Stack[+A]`で共変だとすると、`Stack[Nothing]`型の場合はどんな型の`Stack変数`にでも格納することができる。例えば`Stack[Nothing]`型であるEmptyStackインスタンスがあれば、それは、`Stack[Int]`型の変数と`Stack[String]`型の変数の両方に代入することができる。これは`Nothing`はIntやStringのサブクラスであり、共変の条件を満たすため。`[B >:A]` B=Int, A=Nothing.
 - https://stackoverflow.com/questions/7759361/what-does-b-a-do-in-scala
 - https://gist.github.com/RyotaBannai/2968fa3360d197c81dff4b4174facc38
+- コンパイラは、StackにはAの任意のスーパータイプの値が入れられる可能性があることがわかるようになる。そして、型パラメータEは共変ではないため、どこに出現しても構わない。このようにして、下限境界を利用して、型安全な Stackと共変性を両立することができる。（refer to `line 211`）
+#### Contravariant 反変：共変の反対の概念
+- `val g: G[A] = G[B]`とした時にAがBを継承している時に代入が可能。`class　G[-A]`と表す。　

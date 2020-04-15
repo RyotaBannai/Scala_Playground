@@ -7,16 +7,20 @@ class ReadFile {
 
 object Readfile {
   def main(args: Array[String]): Unit={
-    val fineName = new File(".").getCanonicalPath+"/src/Fn.scala"
-    // val fineName = System.getProperty("user.dir")+"/src/Fn.scala"
+    val fileName = new File(".").getCanonicalPath+"/src/Fn.scala"
+    // val fileName = System.getProperty("user.dir")+"/src/Fn.scala"
+    val buffs = Source.fromFile(fileName)
     around(
       () => println("ファイルを開く"),
-      printFile(fineName),
-      () => println("ファイルを閉じる")
+      printFile(buffs),
+      () => {
+        println("ファイルを閉じる")
+        buffs.close
+      }
     )
   }
-  def printFile(filename: String): Unit = {
-    for (line <- Source.fromFile(filename).getLines()){
+  def printFile(buff: Source): Unit = {
+    for (line <- buff.getLines()){
       println(line)
     }
   }

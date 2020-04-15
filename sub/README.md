@@ -206,9 +206,9 @@ val g: Array[Any] = new Array[Int](1) // error
 val g: Array[Any] = new Array[Any](1) // ok
 ```
 これを非変という.
-- 共変: 型パラメータを持ったクラスG、型パラメータAとBがあったとき、A が B を継承しているときにのみというような代入が許される性質
+- 共変: 型パラメータを持ったクラスG、型パラメータAとBがあったとき、B が A を継承しているときにのみというような代入が許される性質
 ```scala
-val g: G[A] = G[B] // A が B を継承
+val g: G[A] = G[B] // B が A を継承
 ```
 ```scala
 class G[+A]
@@ -218,7 +218,7 @@ class G[+A]
 Object[] objects = new String[1];
 objects[0] = 100;
 ```
-javaは共変であり、A=String, B=Object, G=Arrayと考えると、これでコンパイルが通る。しかし、このコードを実行すると例外 `java.lang.ArrayStoreException` が発生する。これは、objectsに入っているのが実際にはStringの配列（Stringのみを要素として持つ）なのに、2行目でint型（ボクシング変換されてInteger型）の値である100を渡そうとしていることによる。
+javaは共変であり、A=Object, B=String, G=Arrayと考えると、これでコンパイルが通る。しかし、このコードを実行すると例外 `java.lang.ArrayStoreException` が発生する。これは、objectsに入っているのが実際にはStringの配列（Stringのみを要素として持つ）なのに、2行目でint型（ボクシング変換されてInteger型）の値である100を渡そうとしていることによる。
 - Scalaでは非変なのでコンパイルの時点でエラーになる。**静的型付き言語の型安全性**とは、コンパイル時により多くのプログラミングエラーを捕捉するものであるとするなら、配列の設計はScalaの方がJavaより型安全であると言える.
 - Scalaで共変にした場合、変数をimmutableにする様に設計する。（多くの場合問題があればコンパイル時にで救ってくれる）
 ```scala
@@ -228,6 +228,8 @@ class Pair1[+A, +B](val a:A, val b:B){
 var pair: Pair[AnyRef, AnyRef] = new Pair[String, String]("foo","bar")
 ```
  
-- `[B >: A]`is a lower type bound. It means that B is constrained to be a supertype of A.
-- Similarly `[B <: A]` is an upper type bound, meaning that B is constrained to be a subtype of A.
+- `[B >: A]`is a lower type bound. It means that B is constrained to be **a supertype of A**.
+- Similarly `[B <: A]` is an upper type bound, meaning that B is constrained to be **a subtype of A**.
 - `Nothing`は全ての型のサブクラスであるような型を表現する。`Stack[+A]`で共変だとすると、`Stack[Nothing]`型の場合はどんな型の`Stack変数`にでも格納することができる。例えば`Stack[Nothing]`型であるEmptyStackインスタンスがあれば、それは、`Stack[Int]`型の変数と`Stack[String]`型の変数の両方に代入することができる。これは`Nothing`はIntやStringのサブクラスであり、共変の条件を満たすため。`[B >:A]` B=Int, A=Nothing.
+- https://stackoverflow.com/questions/7759361/what-does-b-a-do-in-scala
+- https://gist.github.com/RyotaBannai/2968fa3360d197c81dff4b4174facc38

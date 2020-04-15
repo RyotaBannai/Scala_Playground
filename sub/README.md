@@ -1,5 +1,5 @@
 ### scalaの型
-- 型宣言必要ない(代入したときに**型推論**) `var | val` var は後から変更可で、valは変更不可. 基本的にはvalを使用.
+- 型宣言必要ない(代入したときに**型推論**) `var | val` **varは後から変更可、valは変更不可**. 基本的にはvalを使用.
 - `var`に初めに数値を入れると、後から文字列を代入できない（これはtypescriptと同じ様な型制限）
 - `val x: Int = 3 * 3` 型宣言の場合。
 ### sbtを使う
@@ -72,3 +72,114 @@ Point(1, 2).equals(Point(1, 2))
 ### トレイト
 - 私たちの作るプログラムはしばしば数万行、多くなると数十万行やそれ以上に及ぶことがあります。その全てを一度に把握することは難しいので、プログラムを意味のあるわかりやすい単位で分割しなければなりません。さらに、その分割された部品はなるべく柔軟に組み立てられ、大きなプログラムを作れると良いでしょう。
 - 複数のトレイトを1つのクラスやトレイトにミックスインできる
+- だが、トレイトは直接インスタンス可できない
+```scala
+trait TraitA
+object ObjectA {
+  val a = new TraitA // trait is abstract, can't be instanced.
+}
+```
+- これは**トレイトが単体で使われることをそもそも想定していないため**の制限。**トレイトを使うときは、通常、それを継承したクラスを作成**する。
+- `new Trait{}` は**Traitを継承した無名のクラス**を作って、そのインスタンスを生成する構文なので、トレイトそのものをインスタンス化できているわけではない。
+- トレイトはクラスと違って、パラメータ(コンストラクタの引数)を取ることができない。
+```scala
+trait TraitA(name: String) // error
+
+trait TraitB{
+  val name: String // sub typing （構造的サブタイピング（≈ダックタイピング）） // nominal typingでは同じクラウかサブクラスしか型宣 言できない https://medium.com/@thejameskyle/type-systems-structural-vs-nominal-typing-explained-56511dd969f4
+  def printName(): Unit = println(name)
+}
+class ClassB (val name: String) extends TraitB
+object ClassB {
+  val a = new ClassB("dnn")
+  val a2 = TraitB{ val name = "dmo"} // nameを上書きする様な実装を与えてることもできる
+}
+
+```
+#### トレイトを使う時は菱形継承問題に気を付ける
+- Scalaではoverride指定なしの場合メソッド定義の衝突はエラー
+```scala
+class ClassB extends TraitB with TraitC{
+  override def greet(): Unit = println("Hello")
+  }
+```
+- 継承したトレイトのメソッドを指定することもできる
+```scala
+class ClassB extends TraitB with TraitC{
+  override def greet(): Unit = super[TraitB].greet()
+  }
+```
+- どっちも呼びたい場合
+```scala
+class ClassB extends TraitB with TraitC{
+  override def greet(): Unit = {
+    super[TraitB].greet()
+    super[TraitC].greet()
+    }
+  }
+```
+### 線形化（linearization）
+- Scalaのトレイトの線形化:トレイトがミックスインされた順番をトレイトの継承順番と見做すこと
+- 線形化機能を使うには、ミックスインする全てのトレイトのメソッドを`override`をして継承させる。`最後に読み込まれたメソッド`が使用される。
+```scala
+trait P{
+  def hi(): Unit
+}
+trait C1 extends P{
+  override def hi(): Unit = { println("C1-> hi") }
+}
+trait C2 extends P{
+  override def hi(): Unit = { println("C2-> hi") }
+}
+class Base extends C1 with C2
+(new ClassA).hi() // "C2-> hi"
+
+```
+- `super`で親クラスを呼ぶことで全てのoverrideしたメソッドを呼び出すことができる-> 線形化によるトレイトの積み重ねの処理をScalaの用語では積み重ね可能なトレイト（Stackable Trait）と呼ぶことがある。
+### 落とし穴：トレイトの初期化順序とトレイとのvalの初期化順序の回避方法
+```scala
+trait A {
+  val foo: String
+}
+
+trait B extends A {
+  val bar = foo + "World"
+}
+
+class C extends B {
+  val foo = "Hello"
+
+  def printBar(): Unit = println(bar)
+}
+
+(new C).printBar()
+// 初期化はトレイトAが一番先におこなわれ、変数fooが宣言され、中身は何も代入されていないので、nullになる。
+// このnullをtraitBは使うため、classC ではnullWorldと表示される
+``` 
+    1. 処理を遅延させる`lazy`または`def`を使う
+- lazy は _barの初期化が実際に使われるまで遅延される_
+```scala
+trait B extends A {
+  lazy val bar = foo + "World"
+  // def var 
+}
+```
+- lazy valはvalに比べて若干処理が重く、複雑な呼び出しでデッドロックが発生する場合がある。 valのかわりにdefを使うと毎回値を計算してしまうという問題がある。
+    2. 事前定義（Early Definitions）: フィールドの初期化をスーパークラスより先におこなう方法
+```scala
+trait A {
+  val foo: String
+}
+
+trait B extends A {
+  val bar = foo + "World" // valのままでよい
+}
+
+class C extends {
+  val foo = "Hello" // スーパークラスの初期化の前に呼び出される
+} with B {
+  def printBar(): Unit = println(bar)
+}
+```
+- この事前定義は利用側からの回避方法は、この例の場合はトレイトBのほうに問題がある（普通に使うと初期化の問題が発生してしまう）ので、トレイトBのほうを修正したほうがいい。
+- 時世代ScalaコンパイラであるDottyではトレイとがパラメータを取ることができる.

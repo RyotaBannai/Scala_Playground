@@ -5,17 +5,17 @@ class ClassB
 
 // class Trait extends ClassA with TraitA with TraitB  // traitは幾つでもミックスインできる
 
-trait Pa{
+trait Pa {
   // def hi(): Unit
   def hi(): Unit = println("P-> hi")
 }
-trait C1 extends Pa{
+trait C1 extends Pa {
   override def hi(): Unit = {
     super.hi()
     println("C1-> hi")
   }
 }
-trait C2 extends Pa{
+trait C2 extends Pa {
   override def hi(): Unit = {
     super.hi()
     println("C2-> hi")

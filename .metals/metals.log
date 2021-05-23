@@ -1,0 +1,141 @@
+[0m2021.05.23 22:36:31 INFO  Started: Metals version 0.10.3 in workspace '/Users/ryota/Documents/dev/scala' for client Visual Studio Code 1.56.2.[0m
+[0m2021.05.23 22:36:33 INFO  time: initialize in 2.29s[0m
+[0m2021.05.23 22:36:33 WARN  Build server is not auto-connectable.[0m
+[0m2021.05.23 22:36:33 WARN  no build tool detected in workspace '/Users/ryota/Documents/dev/scala'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.05.23 22:36:39 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:36:49 INFO  no build target: using presentation compiler with only scala-library: 2.12.13[0m
+[0m2021.05.23 22:36:55 INFO  time: code lens generation in 14s[0m
+[0m2021.05.23 22:36:55 INFO  time: code lens generation in 13s[0m
+[0m2021.05.23 22:37:10 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:14 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:14 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:14 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:19 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:19 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:19 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:37:19 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:27 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:27 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:27 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:27 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:29 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:29 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:29 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Abs_Inherit.scala[0m
+[0m2021.05.23 22:38:32 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Bounds.scala[0m
+[0m2021.05.23 22:38:34 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:38:35 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.sc[0m
+[0m2021.05.23 22:38:37 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.scala[0m
+[0m2021.05.23 22:38:47 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Main.scala[0m
+[0m2021.05.23 22:38:48 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:38:52 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:38:52 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:38:53 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:38:53 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Return.scala[0m
+[0m2021.05.23 22:38:56 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/User.scala[0m
+[0m2021.05.23 22:38:57 INFO  time: code lens generation in 1.56s[0m
+[0m2021.05.23 22:38:57 INFO  time: code lens generation in 1.84s[0m
+[0m2021.05.23 22:38:57 INFO  time: code lens generation in 1.99s[0m
+[0m2021.05.23 22:38:57 INFO  time: code lens generation in 2.24s[0m
+[0m2021.05.23 22:38:57 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/TypeParam.scala[0m
+[0m2021.05.23 22:38:58 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Trait.scala[0m
+[0m2021.05.23 22:39:00 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:02 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch.scala[0m
+[0m2021.05.23 22:39:02 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+[0m2021.05.23 22:39:04 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /Users/ryota/Library/Caches/org.scalameta.metals/bsp.trace.json[0m
+May 23, 2021 10:39:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 178
+[0m2021.05.23 22:39:05 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Return.scala[0m
+[0m2021.05.23 22:39:05 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Return.scala[0m
+[0m2021.05.23 22:39:07 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Return.scala[0m
+May 23, 2021 10:39:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 194
+[0m2021.05.23 22:39:08 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+[0m2021.05.23 22:39:08 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+May 23, 2021 10:39:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 202
+[0m2021.05.23 22:39:08 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+[0m2021.05.23 22:39:08 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+[0m2021.05.23 22:39:08 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Stack.scala[0m
+[0m2021.05.23 22:39:09 INFO  Ammonite: Starting BSP server
+[0m
+[0m2021.05.23 22:39:09 INFO  Connected to Ammonite Build server v2.3.8-58-aa8b2ab1[0m
+[0m2021.05.23 22:39:10 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch.scala[0m
+[0m2021.05.23 22:39:10 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch.scala[0m
+[0m2021.05.23 22:39:11 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch.scala[0m
+[0m2021.05.23 22:39:14 INFO  no build target: using presentation compiler with only scala-library: 2.12.13[0m
+May 23, 2021 10:39:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 224
+[0m2021.05.23 22:39:15 INFO  time: code lens generation in 4.71s[0m
+[0m2021.05.23 22:39:15 INFO  time: code lens generation in 4.72s[0m
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 226
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 228
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 225
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 227
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 230
+May 23, 2021 10:39:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 231
+[0m2021.05.23 22:39:15 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Trait.scala[0m
+[0m2021.05.23 22:39:15 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Trait.scala[0m
+[0m2021.05.23 22:39:15 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Trait.scala[0m
+May 23, 2021 10:39:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 244
+[0m2021.05.23 22:39:17 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/TypeParam.scala[0m
+[0m2021.05.23 22:39:18 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/TypeParam.scala[0m
+[0m2021.05.23 22:39:18 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/TypeParam.scala[0m
+[0m2021.05.23 22:39:18 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/TypeParam.scala[0m
+May 23, 2021 10:39:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 260
+[0m2021.05.23 22:39:20 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/User.scala[0m
+[0m2021.05.23 22:39:20 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/User.scala[0m
+[0m2021.05.23 22:39:20 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/User.scala[0m
+May 23, 2021 10:39:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 271
+May 23, 2021 10:39:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 272
+[0m2021.05.23 22:39:21 INFO  time: indexed workspace in 5.05s[0m
+[0m2021.05.23 22:39:22 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:39:23 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:39:23 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+[0m2021.05.23 22:39:23 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Point.scala[0m
+May 23, 2021 10:39:24 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 284
+[0m2021.05.23 22:39:25 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Main.scala[0m
+[0m2021.05.23 22:39:25 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Main.scala[0m
+[0m2021.05.23 22:39:25 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Main.scala[0m
+May 23, 2021 10:39:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 297
+[0m2021.05.23 22:39:26 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.scala[0m
+[0m2021.05.23 22:39:26 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.scala[0m
+[0m2021.05.23 22:39:28 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.scala[0m
+[0m2021.05.23 22:39:28 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Hello.scala[0m
+[0m2021.05.23 22:39:28 INFO  compiling sub/src/hello.sc[0m
+May 23, 2021 10:39:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 326
+[0m2021.05.23 22:39:31 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:31 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:31 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:32 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:33 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Bounds.scala[0m
+[0m2021.05.23 22:39:33 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Bounds.scala[0m
+[0m2021.05.23 22:39:33 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Bounds.scala[0m
+[0m2021.05.23 22:39:33 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Bounds.scala[0m
+[0m2021.05.23 22:39:36 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:37 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:38 INFO  time: compiled Hello.sc in 9.77s[0m
+[0m2021.05.23 22:39:38 INFO  compiling sub/src/hello.sc[0m
+[0m2021.05.23 22:39:39 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:41 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:41 INFO  time: compiled Hello.sc in 2.85s[0m
+[0m2021.05.23 22:39:43 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:43 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:43 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:43 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Switch2.scala[0m
+[0m2021.05.23 22:39:44 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:45 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:45 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m
+[0m2021.05.23 22:39:45 WARN  no build target for: /Users/ryota/Documents/dev/scala/sub/src/Fn.scala[0m

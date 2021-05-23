@@ -23,13 +23,15 @@ object Readfile {
       println(line)
     }
   }
-  def around(init: () => Source, body: Source => Unit, fin: () => Unit): Any = {
+  def around(init: () => Source, body: Source => Unit, fin: () => Unit): Unit = {
     val buffs: Source = init()
     try {
       body(buffs)
     } finally {
       fin()
       buffs.close
+      // sudo lsof -u ryota | grep $(pwd)'/src/Fn.scala'
+      // intellij は親切にファイル閉じてくれるのか。。
     }
   }
 }

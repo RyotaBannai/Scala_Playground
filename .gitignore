@@ -1,1 +1,7 @@
 .metals
+.ammonite
+.vscode
+.idea
+target
+project
+out

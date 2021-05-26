@@ -1,8 +1,8 @@
 ### scala の型
 
 - `var と val`: 型宣言が必要ない(型推論). 基本的には val を使用
-  - var は変更可
-  - val は変更不可
+  - var は変更可(reuseable)
+  - val は変更不可(final)
 - `var` に初めに数値を入れると、後から文字列を代入できない（これは typescript と同じ様な型制限）
 - `val x: Int = 3 * 3` 型宣言の場合。
 
@@ -89,45 +89,54 @@ obj match {
 Point(1, 2).equals(Point(1, 2))
 ```
 
-- クラスと同じファイル内、同じ名前で定義された**シングルトンオブジェクト**は、**コンパニオンオブジェクト**と呼ばれる
-- コンパニオンオブジェクトでも、`private[this]`（そのオブジェクト内からのみアクセス可能）なクラスのメンバーに対してはアクセスできません。単に`private`とした場合、コンパニオンオブジェクトからアクセスできるようになる。
-- コンパニオンオブジェクトを使ったコードを REPL で試す場合は、REPL の:paste コマンドを使って、クラスとコンパニオンオブジェクトを一緒にペーストするようにしてください。クラスとコンパニオンオブジェクトは同一ファイル中に置かれていなければならないのですが、REPL で両者を別々に入力した場合、コンパニオン関係を REPL が正しく認識できないのです.
+- `コンパニオンオブジェクト`: クラスと同じファイル内に同じ名前で定義された`シングルトンオブジェクト`のこと
+  - `private[this]`: コンパニオンオブジェクトはその同名のクラスのメンバーにアクセスできない
+  - `private`: ココンパニオンオブジェクトはその同名のクラスのメンバーにアクセスできる
+- コンパニオンオブジェクトを使ったコードを REPL で試すには、REPL の`:paste` コマンドを使って、クラスとコンパニオンオブジェクトを一緒にペーストする.
+- クラスとコンパニオンオブジェクトは同一ファイル中に置かれていなければならないが、REPL で両者を別々に入力した場合、コンパニオン関係を REPL が正しく認識できない.
+
+- `参照透過性(referentially transparent)`:
+  - In に与えた引数の値が変更されないず、別の値として Out を取れることを保証すること.
+  - `副作用(side effect)`: がないと呼び、これを実現するにはイミュータブルなデータと副作用を伴わないコードを記述することである.
+  - e.g. String クラスの replace メソッド(SP39)
 
 ### トレイト
 
-- 私たちの作るプログラムはしばしば数万行、多くなると数十万行やそれ以上に及ぶことがあります。その全てを一度に把握することは難しいので、プログラムを意味のあるわかりやすい単位で分割しなければなりません。さらに、その分割された部品はなるべく柔軟に組み立てられ、大きなプログラムを作れると良いでしょう。
-- 複数のトレイトを 1 つのクラスやトレイトにミックスインできる
-- だが、トレイトは直接インスタンス可できない
+- 私たちの作るプログラムはしばしば数万行、多くなると数十万行やそれ以上に及ぶことがある. その全てを一度に把握することは難しいため、プログラムを意味のあるわかりやすい単位で分割しなければいけない. さらに、その分割された部品はなるべく柔軟に組み立てられ、大きなプログラムを作れると良い.
+- `ミックスイン`: 一つ以上のトレイトを 1 つのクラスやトレイトに追加すること
+- トレイトは直接インスタンス可できない:
+  - これは`トレイトが単体で使われることをそもそも想定していない`ための制限
+  - トレイトを使うときは、それを継承したクラスを作成する
 
 ```scala
 trait TraitA
 object ObjectA {
-  val a = new TraitA // trait is abstract, can't be instanced.
+  val a = new TraitA // Error: trait is abstract, can't be instanced.
 }
 ```
 
-- これは**トレイトが単体で使われることをそもそも想定していないため**の制限。**トレイトを使うときは、通常、それを継承したクラスを作成**する。
-- `new Trait{}` は**Trait を継承した無名のクラス**を作って、そのインスタンスを生成する構文なので、トレイトそのものをインスタンス化できているわけではない。
-- トレイトはクラスと違って、パラメータ(コンストラクタの引数)を取ることができない。
+- `new Trait{}` は`Trait を継承した無名のクラス`を作って、そのインスタンスを生成する構文でトレイトそのものをインスタンス化できているわけではない。
+- トレイトはクラスと違ってコンストラクタの引数を取ることができない
 
 ```scala
-trait TraitA(name: String) // error
-
+trait TraitA(name: String) // Error: can't take args
+// sub typing （構造的サブタイピング（≈ダックタイピング））
+// nominal typingでは同じクラスかサブクラスしか型宣 言できない https://medium.com/@thejameskyle/type-systems-structural-vs-nominal-typing-explained-56511dd969f4
 trait TraitB{
-  val name: String // sub typing （構造的サブタイピング（≈ダックタイピング）） // nominal typingでは同じクラウかサブクラスしか型宣 言できない https://medium.com/@thejameskyle/type-systems-structural-vs-nominal-typing-explained-56511dd969f4
+  val name: String
   def printName(): Unit = println(name)
 }
 class ClassB (val name: String) extends TraitB
 object ClassB {
   val a = new ClassB("dnn")
-  val a2 = TraitB{ val name = "dmo"} // nameを上書きする様な実装を与えてることもできる
+  val a2 = TraitB{ val name = "dmo"} // name を上書きする様な実装を与えてることもできる
 }
 
 ```
 
-#### トレイトを使う時は菱形継承問題に気を付ける
+#### 菱形(ダイアモンド)継承問題はトレイトにはない(SP38)
 
-- Scala では override 指定なしの場合メソッド定義の衝突はエラー
+- override 指定なしの場合、メソッド定義の衝突はエラーとなる.
 
 ```scala
 class ClassB extends TraitB with TraitC{
@@ -156,8 +165,10 @@ class ClassB extends TraitB with TraitC{
 
 ### 線形化（linearization）
 
-- Scala のトレイトの線形化:トレイトがミックスインされた順番をトレイトの継承順番と見做すこと
-- 線形化機能を使うには、ミックスインする全てのトレイトのメソッドを`override`をして継承させる。`最後に読み込まれたメソッド`が使用される。
+- `トレイトの線形化`: トレイトがミックスインされた順番をトレイトの継承順番と見做すこと
+- `線形化機能`を使う: ミックスインする全てのトレイトのメソッドを`override`をして継承させる
+  - Mixin: extends/ with のことで、 最終派生クラスで extends, with どちらも使用している場合は、with が最後の Mixin となり、これで override される
+- `最後に読み込まれたメソッド`が使用される
 
 ```scala
 trait P{
@@ -342,4 +353,9 @@ def withFile[A](filename: String)(f: Source => A): A = {
 
 # Scalable Programming
 
--
+- Int はクラスの`単純名`で、`scala.Int` は`完全名`である. (java.lang.String は完全名で、String は単純名)(SP49)
+- Int は java の int に対応している. もっと正確に言えば、java の全てのプリミティブ型に対応している
+- `list.foreach(item => println(item))`: foreach に渡されるのは`関数リテラル`と呼ばれ、その`本体`は println(item) である
+- 関数リテラルが一個の引数をとる一文から構成される場合は、引数を明示的に指定しなくても済む: この省略記法は`部分的に適用された関数(partially applied function)`と呼ばれる(SP57)
+- `for(item <- list) ... `: `<-` は in と読めば、`要素 ∈ 集合` の関係を表す数学記号に対応する(SP57)
+  - item は val

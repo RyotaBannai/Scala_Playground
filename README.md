@@ -359,3 +359,19 @@ def withFile[A](filename: String)(f: Source => A): A = {
 - 関数リテラルが一個の引数をとる一文から構成される場合は、引数を明示的に指定しなくても済む: この省略記法は`部分的に適用された関数(partially applied function)`と呼ばれる(SP57)
 - `for(item <- list) ... `: `<-` は in と読めば、`要素 ∈ 集合` の関係を表す数学記号に対応する(SP57)
   - item は val
+- `val stringList: Array[String] = new Array[String](3);`
+  - 上記の場合、左側の `Array[String]` が型であって、`new Array[String](3)` は型の一部にはならない.
+  - val とした時に、stringList 自体は常に同じ Array を指すことになるが、Array の Item がさす値自体は変わる可能性がある(immutable)ため、`stringList(0) = "hello";` のように変更することができる(SP61)
+- メソッドのパラメータが１つだけなら、ドットや括弧を使わずに呼び出せる.
+  - 例えば `0 to 2` は 0 という Int オブジェクトの to をメソッドを 2 を引数として呼び出していること(`0.to(2)`)を表す(SP61)
+    - この to は 0,1,2 の値を格納したシーケンスの一種を返す.
+    - `scala.collection.immutable.Range.Inclusive = Range 0 to 2`
+  - この時、メソッドを呼び出すオブジェクトは`レシーバ`と呼ばれる.
+  - パラメータが一つでも `println 10` これはレシーバがないので動作しないが、`Console println 10` とすると動作する
+  - `(1).+(2)`とすることもできる: このことからもわかるように、scala では全ての`演算`が`メソッド呼び出し`である.
+- 変数に application 演算子をつけるとそれは、その変数に対して apply メソッド(`ファクトリメソッド`という)を実行したことになる
+  - `stringList(0) === stringList.apply(0)`
+  - `(stringList(0) = 1) === stringList.update(0, 1)`
+  - これらのファクトリメソッドは、`Arrayコンパニオンオブジェクト(companion object)`で定義されている
+  - `可変個引数(variadic parameters)`は`連続パラメータ(repeated parameters)`とも呼ばれる(SP63)
+- scala は配列から式に至るまであらゆるものがメソッドを持つオブジェクトだとすることによって、概念を単純化している

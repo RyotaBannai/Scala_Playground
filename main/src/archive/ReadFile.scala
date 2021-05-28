@@ -1,13 +1,11 @@
 import scala.io.Source
 import java.io.File
 
-class ReadFile {
+class ReadFile {}
 
-}
-
-object Readfile {
-  def main(args: Array[String]): Unit={
-    val fileName = new File(".").getCanonicalPath+"/src/Fn.scala"
+object ReadFile {
+  def main(args: Array[String]): Unit = {
+    val fileName = new File(".").getCanonicalPath + "/src/Fn.scala"
     // val fileName = System.getProperty("user.dir")+"/src/Fn.scala"
     around(
       () => {
@@ -19,11 +17,15 @@ object Readfile {
     )
   }
   def printFile(buffs: Source): Unit = {
-    for (line <- buffs.getLines()){
+    for (line <- buffs.getLines()) {
       println(line)
     }
   }
-  def around(init: () => Source, body: Source => Unit, fin: () => Unit): Unit = {
+  def around(
+      init: () => Source,
+      body: Source => Unit,
+      fin: () => Unit
+  ): Unit = {
     val buffs: Source = init()
     try {
       body(buffs)
@@ -31,7 +33,6 @@ object Readfile {
       fin()
       buffs.close
       // sudo lsof -u ryota | grep $(pwd)'/src/Fn.scala'
-      // intellij は親切にファイル閉じてくれるのか。。
     }
   }
 }

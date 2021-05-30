@@ -396,3 +396,16 @@ def withFile[A](filename: String)(f: Source => A): A = {
   - （コンパイル時に）自動生成されたクラスの名前は、クラス名の末尾にドルをつけたものになる(`ChecksumAccumulator$`).
 - java.lang, scala パッケージメンバのほか `Predef` というシングルトンオブジェクトのメンバを暗黙裏にファイルに import している(SP86)
   - この `Predef` には println など役立つメソッドを多数含む
+- `整数値型(integral types)`: Byte, Short, Int, Long, Char
+- `数値型(numeric types)`: 整数値型 Float, Double
+- Int, Double などは`値型(value type)`と呼ばれ、これらのインスタンスをそのまま`Java プリミティブ型`に移すことができる(SP91)
+- Scala では全てのメソッドが演算子(`中置演算子(infix operator)`)になれる（`中置記法（ちゅうちきほう、infix notation`）
+  - example. indexOf メソッド: `"hello world" indexOf ('o', 5)`
+- `前置(prefix)`: `-7` の`-`のように、メソッドをオブジェクトの前に置くメソッド(`_, -, !, ~` only). `unary_-`
+  - `*P` とした時, `*` は unary メソッドの一つでは無いため、`*.p` と認識する(SP99)
+- `後置(postfix)`: `7 toLong` の `toLong` のようにオブジェクトの後に置くメソッド. `unary_toLong`
+- `名前渡しパラメーター(by-name parameter)`: `短絡(ショートサーキット)`のように第二引数の評価を行わない仕組みを実現する機構(SP103)
+  - 演算子はメソッドなので、`&& ||` のような論理演算子を仕様する際に、渡す関数が引数として先に評価されるのではないかと考えるかもしれないが、名前渡しパラメーターの仕組みを使うことで先に評価せず先延ばしすることができる.
+- scala の `==` 演算子では、プリミティブ型も参照型もどちらも比較できる.
+  - Java では、参照型の比較は Java マシンヒープないの同じオブジェクトを指しているかどうかの比較になる.
+  - scala で上記と同様の比較をするなら eq, ne 演算子を利用(SP106)

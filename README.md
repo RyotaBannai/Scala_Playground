@@ -419,3 +419,14 @@ def withFile[A](filename: String)(f: Source => A): A = {
   - `オブジェクトグラフ`: 複合のオブジェクトはそのインスタンス変数を介して他のオブジェクトとの間に参照関係を持ち、全体として`グラフ構造`になる(SP114)
 - `補助コンストラクタ(auxiliary constructors)`: `クラスに複数のコンストラクターを与えなければならない場合`に利用する、`基本コンストラクタ(primary constructors)`以外のコンストラクタのこと.(SP118)
   - `this()`で始めることで、保持コンストラクタは最終的には、基本コンストラクタに落ち着くという効果がある(基本コンストラクタがクラスへの唯一の入り口である.)
+- Scala コンパイラでは、内部で演算子識別子を`すり潰し(mangle)`して `$ 文字`を埋め込んで有効な Java 識別子に変えている.
+  - 例えば、`:->` 演算子は、Scala の内部では、`$colon$minus$greater` と表されている(SP124)
+  - Java からこの内部表現にアクセスしたい場合は、この内部表現を使わなければいけない.
+- `ミックス識別子(mixed identifiers)`: `英数字識別子(unary など)`に`アンダスコアー(_)`と`演算子識別子(+ など)`が続く形である.
+  - example. `unary_+`
+- `リテラル識別子(literal identifiers)`: バッククォートで囲まれた任意の文字列(\`...\`)
+  - バッククォートの間にどんな文字列を入れてもランタイムに識別子として受付させようという考えである.
+  - example. yield は scala の予約後なので、Java Thread の yield メソッドにアクセスすることはできないが、バッククォートを使って、Thread.\`yield\`() とすればこのメソッドにアクセスすることができる.(SP124)
+- `暗黙の型変換(implicit conversations)`:
+  - `2 * Rational(2)` は `(2).*(Rational(2))` となるが、Int 2 という Int 型に対して Rational に定義された `*` 演算子を適用するために暗黙裏に型変換を行うこと.
+  - example. `import scala.language.implicitConversions; implicit def intToRational(x: Int) = new Rational(x)`

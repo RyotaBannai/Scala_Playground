@@ -430,3 +430,13 @@ def withFile[A](filename: String)(f: Source => A): A = {
 - `暗黙の型変換(implicit conversations)`:
   - `2 * Rational(2)` は `(2).*(Rational(2))` となるが、Int 2 という Int 型に対して Rational に定義された `*` 演算子を適用するために暗黙裏に型変換を行うこと.
   - example. `import scala.language.implicitConversions; implicit def intToRational(x: Int) = new Rational(x)`
+- val を使うチャンスを探す. val はコードを読みやすく、リファクタリングしやすいものにしてくれる(SP131)
+  - 一般に var を避ける, とともに while も避ける. (これらは命令型のスタイルなため). 特に while 式は値を生み出さない(SP133)
+- 代入の結果は常に `Unit ()` であり、代入された変数の結果が評価に利用されない.
+  - example. `while((line = readLine()) != "") { ... }`: `(line = readLine())`の結果は常に Unit であり、`""` になることはない.(SP133)
+- 例外を値として受け取ることができる:
+  - `val half = if(n % 2 == 0) n /2 else new RuntimeException("n must be even")`
+  - この場合の else は 例外を投げて `Nothing を計算`する（`何も計算しない`という意味）.(SP139)
+- `finally 節`は、非メモリリソースを確実にクローズするために使うのであり、`try-catch 節`で計算された値を変更してはならない(SP141)
+  - `def f(): Int try return 1 finally return 2` は 2 を返す(Java も PHP も同様.)
+  - `def g(): Int try 1 finally 2` は 1 を返す (!Scala 固有の危険な動作)

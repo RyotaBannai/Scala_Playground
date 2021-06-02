@@ -440,3 +440,26 @@ def withFile[A](filename: String)(f: Source => A): A = {
 - `finally 節`は、非メモリリソースを確実にクローズするために使うのであり、`try-catch 節`で計算された値を変更してはならない(SP141)
   - `def f(): Int try return 1 finally return 2` は 2 を返す(Java も PHP も同様.)
   - `def g(): Int try 1 finally 2` は 1 を返す (!Scala 固有の危険な動作)
+- `break, continue を使わずに済ませる`:
+  - continue は if に、break を Boolean 変数に置き換える.(SP143)
+  - どうしても break を使いたい場合は、`scala.util.control.Breaks._` を使う.
+    - breakable は break 例外をキャッチするために使われるだけなので、break がならずしも breakable の中にないといけないわけではない(SP145)
+
+```scala
+// impl without break and continue.
+var i = 0
+var fountIt = false
+while(i < args.length && !foundIt) {
+  if(!args(i).startsWith("-"))
+    if(args(i).endsWith(".scala"))
+    foundIt = true
+  i = i + 1
+}
+
+// better impl with recursive
+def searchFrom(i: Int): Int =
+  if (i >= args.length) -1
+  else if (args(i).startWith("-")) searchFrom(i + 1)
+  else if (args(i).endsWith(".scala")) i
+val i = searchFrom(0)
+```

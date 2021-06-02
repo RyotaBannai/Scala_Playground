@@ -463,3 +463,5 @@ def searchFrom(i: Int): Int =
   else if (args(i).endsWith(".scala")) i
 val i = searchFrom(0)
 ```
+
+- Java では外側のスコープの変数と同じ名前を持つ変数を内側のスコープで作成できないが、Scala では内側のスコープでは外側の変数は見えなくなるため作成できる. これを内側の変数は`シャドウイング(shadow)する`という(SP147)

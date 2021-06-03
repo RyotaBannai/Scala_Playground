@@ -476,3 +476,11 @@ val i = searchFrom(0)
 - `開いた項(open terms)`: `自由変数(free variables)` を含む関数 (`Closure` とも言う)
   - 自由変数の`束縛(binding)`をつかみ、開いた項を閉じることによって生み出されたものが関数（オブジェクト）と言える(SP162)
 - `項`: 式を構成する論理的な単位(SP162)
+- `連続パラメータ(repeated parameters, 可変個引数)`:
+  - `def echo(args: String*) = for (arg <- args) println(arg); echo("a", "b", "c")`
+  - 連続パラメータの型は Array
+  - Array 型は直接渡せないので、次のようにする:
+    - `echo(Array("a", "b", "c"): _*)`: But this results in `warning: Passing an explicit array value to a Scala varargs method is deprecated (since 2.13.0) and will result in a defensive copy; Use the more efficient non-copying ArraySeq.unsafeWrapArray or an explicit toIndexedSeq call`
+      - `scala.collection.immutable.ArraySeq.unsafeWrapArray(arr): _*)`
+      - `arr.toIndexedSeq: _*`
+    - [reference](https://blog.magnolia.tech/entry/2019/06/02/175206)

@@ -484,3 +484,9 @@ val i = searchFrom(0)
       - `scala.collection.immutable.ArraySeq.unsafeWrapArray(arr): _*)`
       - `arr.toIndexedSeq: _*`
     - [reference](https://blog.magnolia.tech/entry/2019/06/02/175206)
+- `末尾再帰(tail recursive)`: 再起処理の最後の処理として自分自身を呼び出す再起関数を言う.(SP168)
+  - Scala コンパイラは、末尾再帰を検出したら、パラメータを新しい値に更新した後、再起呼び出しを関数 n 冒頭にジャンプするコードに書き換える. つまり、余分なオーバーヘッドがかからない.(SP168)
+  - 再起呼び出しのために新しいスタックフレーム(関数呼び出しの際のリターンアドレスや引数をメモリに領域に置かない)を作らない(SP169)
+  - `def boom(x: Int): Int = if(x == 0) throw new Exception("boom!") else boom(x - 1) + 1` これは、再起呼び出しの後でインクリメントをしているため、末尾再帰ではない
+  - `def boom(x: Int): Int = if(x == 0) throw new Exception("boom!") else boom(x - 1)` こちらは末尾再帰.
+  - もしスタックフレームが１つになる（末尾呼び出しの最適化）のが紛らわしいと感じるようなら、scala シェルか scala コンパイラに次のような引数を与えると良い: `scala -g:notailcalls`

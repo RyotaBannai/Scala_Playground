@@ -490,3 +490,5 @@ val i = searchFrom(0)
   - `def boom(x: Int): Int = if(x == 0) throw new Exception("boom!") else boom(x - 1) + 1` これは、再起呼び出しの後でインクリメントをしているため、末尾再帰ではない
   - `def boom(x: Int): Int = if(x == 0) throw new Exception("boom!") else boom(x - 1)` こちらは末尾再帰.
   - もしスタックフレームが１つになる（末尾呼び出しの最適化）のが紛らわしいと感じるようなら、scala シェルか scala コンパイラに次のような引数を与えると良い: `scala -g:notailcalls`
+- `共通部分は関数本体であり、非共通部分は引数という形で与える必要がある`(SP172)
+- `高階関数(higher-order functions)`: 引数として関数を受け取る関数

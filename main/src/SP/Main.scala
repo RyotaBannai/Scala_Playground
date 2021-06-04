@@ -17,5 +17,6 @@ object Main extends App {
 
   // print all file ends with '.scala'
   // FileMatcher.filesEnding(".scala").foreach(println)
-  ControlFlow.use("log.txt")
+  // ControlFlow.use("log.txt")
+  ControlFlow.useAssert()
 }

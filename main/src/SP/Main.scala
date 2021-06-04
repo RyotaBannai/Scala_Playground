@@ -2,6 +2,7 @@ import ChecksumAccumulator._
 import Rational._
 import FP99._
 import FileMatcher._
+import ControlFlow._
 
 // Entry point.
 // when single object doesn't have ..., it's called standalone object.(SP85)
@@ -15,5 +16,6 @@ object Main extends App {
   // println(FP99.multiTable())
 
   // print all file ends with '.scala'
-  FileMatcher.filesEnding(".scala").foreach(println)
+  // FileMatcher.filesEnding(".scala").foreach(println)
+  ControlFlow.use("log.txt")
 }

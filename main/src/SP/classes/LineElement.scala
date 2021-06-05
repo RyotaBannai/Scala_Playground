@@ -1,8 +1,9 @@
 package classes
 
-import ArrayElement._
+import Element._
 
-class LineElement(val s: String) extends ArrayElement(Array(s)) {
+class LineElement(val s: String) extends Element {
+  val contents = Array(s)
   override def width: Int = s.length
   override def height: Int = 1
 }

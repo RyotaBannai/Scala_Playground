@@ -3,6 +3,7 @@ import Rational._
 import FP99._
 import FileMatcher._
 import ControlFlow._
+import classes._
 
 // Entry point.
 // when single object doesn't have ..., it's called standalone object.(SP85)
@@ -18,5 +19,8 @@ object Main extends App {
   // print all file ends with '.scala'
   // FileMatcher.filesEnding(".scala").foreach(println)
   // ControlFlow.use("log.txt")
-  ControlFlow.useAssert()
+  // ControlFlow.useAssert()
+
+  val a: Element = new ArrayElement(Array("string"))
+  println(a.width)
 }

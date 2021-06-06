@@ -1,7 +1,7 @@
 // n, d class parameters.
 // scala コンパイラは、これらの２つのクラスパラメタを集めて、
 // 同じ２つのパラメタをとる基本コンストラクタ(primary constructors)を生成する(SP113)
-class Rational(n: Int, d: Int) {
+class Rational(n: Int, d: Int) extends Ordered[Rational] {
   // precondition: require は Predef に定義されている
   require(d != 0)
 
@@ -33,6 +33,9 @@ class Rational(n: Int, d: Int) {
   override def toString = s"$numer / $denom";
   // find greatest common divider
   private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
+  def compare(that: Rational) =
+    (this.numer * that.denom) - (that.numer * this.denom)
 }
 
 object Rational {}

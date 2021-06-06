@@ -12,8 +12,10 @@ object Main extends App {
   // val acc = new ChecksumAccumulator // NOTE: instance variable はそれぞれ保有
   // println(ChecksumAccumulator.calculate("hello"))
 
-  // val r = new Rational(1, 2)
-  // println()
+  val r1 = new Rational(1, 2)
+  val r2 = new Rational(3, 2)
+  // Thank to Ordered trait.
+  println(r1 < r2)
 
   // println(FP99.multiTable())
 
@@ -28,6 +30,6 @@ object Main extends App {
   // val d = c beside c;
   // println(d.toString)
 
-  var nSides = args(0).toInt
-  println(spiral(nSides, 0))
+  // var nSides = args(0).toInt
+  // println(spiral(nSides, 0))
 }

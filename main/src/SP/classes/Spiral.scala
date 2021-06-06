@@ -24,3 +24,9 @@ object Spiral {
         (verticalBar above corner) beside (space above sp)
     }
 }
+
+// $ sbt $ run 5
+object Main extends App {
+  var nSides = args(0).toInt
+  println(Spiral.spiral(nSides, 0))
+}

@@ -1,6 +1,6 @@
 package my_traits
 
-import Point._
+import my_traits.Point
 
 trait Rectangular {
   def topLeft: Point

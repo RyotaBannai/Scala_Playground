@@ -5,6 +5,7 @@ import FileMatcher._
 import ControlFlow._
 import classes.Element._
 import classes.Spiral._
+import stackable_traits._
 
 // Entry point.
 // when single object doesn't have ..., it's called standalone object.(SP85)
@@ -32,4 +33,11 @@ object Main extends App {
 
   // var nSides = args(0).toInt
   // println(spiral(nSides, 0))
+
+  val a = new BasicIntQueue with DoublingTrait with FilteringTrait // trait を追加
+  a.put(0)
+  a.put(-1)
+  a.put(2)
+  println(a.get())
+  println(a.get())
 }

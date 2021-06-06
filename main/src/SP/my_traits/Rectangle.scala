@@ -1,7 +1,7 @@
 package my_traits
 
 import Rectangular._
-import Point._
+import my_traits.Point
 
 class Rectangle extends Rectangular {
   def topLeft = new Point(0, 0)

@@ -1,6 +1,6 @@
 package my_traits
 
-import Rectangular._
+import my_traits.Rectangular._
 
 abstract class Component extends Rectangular {
   //

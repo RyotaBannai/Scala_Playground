@@ -1,0 +1,188 @@
+{
+    "version": "1.4.0",
+    "project": {
+        "name": "projectroot",
+        "directory": "/Users/ryota/Documents/dev/scala/projectRoot",
+        "workspaceDir": "/Users/ryota/Documents/dev/scala/projectRoot",
+        "sources": [
+            "/Users/ryota/Documents/dev/scala/projectRoot/src/main/scala",
+            "/Users/ryota/Documents/dev/scala/projectRoot/src/main/scala-2.12",
+            "/Users/ryota/Documents/dev/scala/projectRoot/src/main/scala-2",
+            "/Users/ryota/Documents/dev/scala/projectRoot/src/main/java",
+            "/Users/ryota/Documents/dev/scala/projectRoot/target/scala-2.12/src_managed/main"
+        ],
+        "dependencies": [
+            
+        ],
+        "classpath": [
+            "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-library.jar",
+            "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalactic/scalactic_2.12/3.0.8/scalactic_2.12-3.0.8.jar",
+            "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-reflect.jar"
+        ],
+        "out": "/Users/ryota/Documents/dev/scala/projectRoot/.bloop/projectroot",
+        "classesDir": "/Users/ryota/Documents/dev/scala/projectRoot/.bloop/projectroot/scala-2.12/classes",
+        "resources": [
+            "/Users/ryota/Documents/dev/scala/projectRoot/src/main/resources",
+            "/Users/ryota/Documents/dev/scala/projectRoot/target/scala-2.12/resource_managed/main"
+        ],
+        "scala": {
+            "organization": "org.scala-lang",
+            "name": "scala-compiler",
+            "version": "2.12.14",
+            "options": [
+                
+            ],
+            "jars": [
+                "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-library.jar",
+                "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-compiler.jar",
+                "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-reflect.jar",
+                "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-xml_2.12-1.0.6.jar"
+            ],
+            "analysis": "/Users/ryota/Documents/dev/scala/projectRoot/target/streams/compile/bloopAnalysisOut/_global/streams/inc_compile_2.12.zip",
+            "setup": {
+                "order": "mixed",
+                "addLibraryToBootClasspath": true,
+                "addCompilerToClasspath": false,
+                "addExtraJarsToClasspath": false,
+                "manageBootClasspath": true,
+                "filterLibraryFromClasspath": true
+            }
+        },
+        "java": {
+            "options": [
+                
+            ]
+        },
+        "test": {
+            "frameworks": [
+                {
+                    "names": [
+                        "org.scalacheck.ScalaCheckFramework"
+                    ]
+                },
+                {
+                    "names": [
+                        "org.specs2.runner.Specs2Framework",
+                        "org.specs2.runner.SpecsFramework"
+                    ]
+                },
+                {
+                    "names": [
+                        "org.specs.runner.SpecsFramework"
+                    ]
+                },
+                {
+                    "names": [
+                        "org.scalatest.tools.Framework",
+                        "org.scalatest.tools.ScalaTestFramework"
+                    ]
+                },
+                {
+                    "names": [
+                        "com.novocode.junit.JUnitFramework"
+                    ]
+                },
+                {
+                    "names": [
+                        "munit.Framework"
+                    ]
+                }
+            ],
+            "options": {
+                "excludes": [
+                    
+                ],
+                "arguments": [
+                    
+                ]
+            }
+        },
+        "platform": {
+            "name": "jvm",
+            "config": {
+                "home": "/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre",
+                "options": [
+                    "-Duser.dir=/Users/ryota/Documents/dev/scala/projectRoot"
+                ]
+            },
+            "mainClass": [
+                
+            ]
+        },
+        "resolution": {
+            "modules": [
+                {
+                    "organization": "org.scala-lang",
+                    "name": "scala-library",
+                    "version": "2.12.14",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "scala-library",
+                            "path": "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-library.jar"
+                        },
+                        {
+                            "name": "scala-library",
+                            "classifier": "sources",
+                            "path": "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.14/scala-library-2.12.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.scalactic",
+                    "name": "scalactic_2.12",
+                    "version": "3.0.8",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "scalactic_2.12",
+                            "path": "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalactic/scalactic_2.12/3.0.8/scalactic_2.12-3.0.8.jar"
+                        },
+                        {
+                            "name": "scalactic_2.12",
+                            "classifier": "sources",
+                            "path": "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalactic/scalactic_2.12/3.0.8/scalactic_2.12-3.0.8-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.scala-lang",
+                    "name": "scala-reflect",
+                    "version": "2.12.14",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "scala-reflect",
+                            "path": "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-reflect.jar"
+                        },
+                        {
+                            "name": "scala-reflect",
+                            "classifier": "sources",
+                            "path": "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.12.14/scala-reflect-2.12.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.scala-lang",
+                    "name": "scala-library",
+                    "version": "2.12.14",
+                    "configurations": "optional",
+                    "artifacts": [
+                        {
+                            "name": "scala-library",
+                            "path": "/Users/ryota/.sbt/boot/scala-2.12.14/lib/scala-library.jar"
+                        },
+                        {
+                            "name": "scala-library",
+                            "classifier": "sources",
+                            "path": "/Users/ryota/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.14/scala-library-2.12.14-sources.jar"
+                        }
+                    ]
+                }
+            ]
+        },
+        "tags": [
+            "library"
+        ]
+    }
+}

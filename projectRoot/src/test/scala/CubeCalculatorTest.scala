@@ -1,7 +1,5 @@
-import org.scalatest.FunSuite
+import org.scalatest.flatspec.AnyFlatSpec
 
-class CubeCalculatorTest extends FunSuite {
-  test("CubeCalculator.cube") {
-    assert(CubeCalculator.cube(3) === 27)
-  }
+class CubeCalculatorTest extends AnyFlatSpec {
+  assert(CubeCalculator.cube(3) === 27)
 }

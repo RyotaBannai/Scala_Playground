@@ -9,3 +9,9 @@ scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % "1.0.0-MF"
 )
+
+// scalatest
+libraryDependencies ++= Seq(
+  "org.scalactic" %% "scalactic" % "3.0.8",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+)

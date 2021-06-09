@@ -77,4 +77,34 @@ object CaseClasses {
     case Num(_) => "a number"
     case Var(_) => "a variable"
   }
+
+  /*
+   * show(capitals get "France")
+   * show(capitals get "North Pole")
+   */
+  def capitals = Map("France" -> "Paris", "Japan" -> "Tokyo")
+  def show(x: Option[String]) = x match {
+    case Some(s) => s
+    case None    => "?"
+  }
+
+  /*
+   * case sequence example.
+   */
+  val withDefault: Option[Int] => Int = {
+    case Some(x) => x
+    case None    => 0
+  }
+
+  /*
+   * => second.isDefinedAt(List()) <= false
+   * => second.isDefinedAt(List(1,2,3)) <= true
+   */
+  val second: PartialFunction[List[Int], Int] = { case x :: y :: _ =>
+    y
+  }
+
+  // => for(Some(fruit) <- results) println(fruit) <= Apple\nOrange
+  val results = List(Some("Apple"), None, Some("Orange"))
+
 }

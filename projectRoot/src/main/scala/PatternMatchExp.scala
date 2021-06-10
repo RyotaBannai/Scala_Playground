@@ -1,16 +1,6 @@
 import math.{E, Pi}
 
-sealed abstract class Expr
-
-/** case classes */
-case class Var(name: String) extends Expr
-case class Num(num: Double) extends Expr
-// Unary 1 被演算子
-case class UnOp(operator: String, arg: Expr) extends Expr
-// Binary 2 被演算子
-case class BinOp(operator: String, left: Expr, right: Expr) extends Expr
-
-object CaseClasses {
+object PatternMatchExp {
 
   /** Simplify Operators.
     * @example simplifyTop(UnOp("-", UnOp("-", Var("name")))) => Var(name)

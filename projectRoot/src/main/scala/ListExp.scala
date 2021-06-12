@@ -11,4 +11,7 @@ object ListExp {
     case List()   => xs
     case x :: xs1 => rev(xs1) ::: List(x)
   }
+
+  // ys: accum, y: item
+  def revLeft[T](xs: List[T]) = (List[T]() /: xs) { (ys, y) => y :: ys }
 }

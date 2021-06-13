@@ -44,6 +44,7 @@ object Msort {
 }
 
 object OrderedMSort {
+  // Upper bound
   def orderedMSort[T <: Ordered[T]](xs: List[T]): List[T] = {
     def merge(xs: List[T], ys: List[T]): List[T] = (xs, ys) match {
       case (Nil, _) => ys

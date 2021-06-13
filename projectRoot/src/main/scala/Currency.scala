@@ -16,12 +16,21 @@ abstract class CurrencyZone {
     def designation: String
     def +(that: Currency): Currency = make(this.amount + that.amount)
     def *(x: Double): Currency = make((this.amount * x).toLong)
+
+    def from(other: CurrencyZone#AbstractCurrency): Currency =
+      make(
+        math.round(
+          other.amount.toDouble * Converter.exchangeRate(other.designation)(
+            this.designation
+          )
+        )
+      )
   }
 
   val CurrencyUnit: AbstractCurrency
 }
 
-abstract class US extends CurrencyZone {
+object US extends CurrencyZone {
   abstract class Dollar extends AbstractCurrency {
     def designation: String = "USD"
   }
@@ -32,7 +41,7 @@ abstract class US extends CurrencyZone {
   override val CurrencyUnit = Dollar
 }
 
-abstract class Europe extends CurrencyZone {
+object Europe extends CurrencyZone {
   abstract class Euro extends AbstractCurrency {
     def designation: String = "EUR"
   }
@@ -43,7 +52,7 @@ abstract class Europe extends CurrencyZone {
   override val CurrencyUnit = Euro
 }
 
-abstract class Japan extends CurrencyZone {
+object Japan extends CurrencyZone {
   abstract class Yen extends AbstractCurrency {
     def designation: String = "JPY"
   }
@@ -53,7 +62,25 @@ abstract class Japan extends CurrencyZone {
   override val CurrencyUnit = Yen
 }
 
+object Converter {
+  var exchangeRate = Map(
+    "USD" -> Map("USD" -> 1.0, "EUR" -> 0.7596, "JPY" -> 1.211, "CHF" -> 1.223),
+    "EUR" -> Map("USD" -> 1.316, "EUR" -> 1.0, "JPY" -> 1.594, "CHF" -> 1.623),
+    "JPY" -> Map(
+      "USD" -> 0.8257,
+      "EUR" -> 0.6272,
+      "JPY" -> 1.0,
+      "CHF" -> 1.018
+    ),
+    "CHF" -> Map("USD" -> 0.8108, "EUR" -> 0.6160, "JPY" -> 0.982, "CHF" -> 1.0)
+  )
+}
+
 /*
 val jp = new Japan{}
 jp.make(1000)
+
+Japan.Yen from US.Dollar * 100
+Europe.Euro from res0
+US.Dollar from res1
  */

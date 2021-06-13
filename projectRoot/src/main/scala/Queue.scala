@@ -1,4 +1,11 @@
-class Queue[T](private val leading: List[T], private val trailing: List[T]) {
+trait MyOption[+T]
+case class MySome[T](value: T) extends MyOption[T]
+case object MyNone extends MyOption[Nothing]
+
+class Queue[+T] private (
+    private val leading: List[T],
+    private val trailing: List[T]
+) {
   private def mirror =
     if (leading.isEmpty) {
       println("isEmpty")
@@ -9,7 +16,7 @@ class Queue[T](private val leading: List[T], private val trailing: List[T]) {
     val q = mirror
     new Queue(q.leading.tail, q.trailing)
   }
-  def enqueue(x: T) = new Queue(leading, x :: trailing)
+  def enqueue[U >: T](x: U) = new Queue[U](leading, x :: trailing)
   def showItems() = {
     println("head:\n" + head)
     println("tail:\n")
@@ -18,3 +25,13 @@ class Queue[T](private val leading: List[T], private val trailing: List[T]) {
     q.trailing.foreach(println)
   }
 }
+
+object Queue {
+  def apply[T](xs: T*) = new Queue[T](xs.toList, Nil)
+  def apply() = apply[Int]()
+}
+
+/*
+ * val q = Queue(new MyOption())
+ * val qq = q enqueue (MyNone)
+ */

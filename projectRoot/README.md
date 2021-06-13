@@ -252,10 +252,12 @@ class TypeParam[A](var value:A) {
 
 #### 変位指定（variance）
 
-##### 共変（covariant）
+- 型パラメータの横に書ける +, - の記号を`変位指定アノテーション(variance annotations)`という(SP369)
 
-- Scala では、何も指定しなかった型パラメータは通常は**非変（invariant)**
-- 非変：型パラメータを持ったクラス G、型パラメータ A と B があったとき、A = B のときにのみに代入が許される
+##### 共変（covariant）と非変（invariant）
+
+- Scala では、何も指定しなかった型パラメータは通常は`非変（non-variant)`
+- `非変`：型パラメータを持ったクラス G、型パラメータ A と B があったとき、A = B のときにのみに代入が許される
 
 ```scala
 val g: G[A] = G[B]
@@ -268,9 +270,9 @@ val g: Array[Any] = new Array[Int](1) // error
 val g: Array[Any] = new Array[Any](1) // ok
 ```
 
-これを非変という.
+これを`非変`という.
 
-- 共変: 型パラメータを持ったクラス G、型パラメータ A と B があったとき、B が A を継承しているときにのみというような代入が許される性質
+- `共変`: 型パラメータを持ったクラス G、型パラメータ A と B があったとき、B が A を継承しているときにのみというような代入が許される性質
 
 ```scala
 val g: G[A] = G[B] // B が A を継承
@@ -280,17 +282,19 @@ val g: G[A] = G[B] // B が A を継承
 class G[+A]
 ```
 
-のように型パラメータの前に`+`を付けるとその型パラメータは（あるいはそのクラスは）共変になる。
+のように型パラメータの前に`+`を付けるとその型パラメータは（あるいはそのクラスは）`共変`になる
 
 ```java
 Object[] objects = new String[1];
 objects[0] = 100;
 ```
 
-java は共変であり、A=Object, B=String, G=Array と考えると、これでコンパイルが通る。しかし、このコードを実行すると例外 `java.lang.ArrayStoreException` が発生する。これは、objects に入っているのが実際には String の配列（String のみを要素として持つ）なのに、2 行目で int 型（ボクシング変換されて Integer 型）の値である 100 を渡そうとしていることによる。
+- java は共変であり、A=Object, B=String, G=Array と考えると、これでコンパイルが通る（`val a: Array[Object] = Array[String]`）. しかし, このコードを実行すると例外 `java.lang.ArrayStoreException` が発生する. これは、objects に入っているのが実際には String の配列（String のみを要素として持つ）なのに、2 行目で int 型（ボクシング変換されて Integer 型）の値である 100 を渡そうとしていることによる(SP370)
 
-- Scala では非変なのでコンパイルの時点でエラーになる。**静的型付き言語の型安全性**とは、コンパイル時により多くのプログラミングエラーを捕捉するものであるとするなら、配列の設計は Scala の方が Java より型安全であると言える.
-- Scala で共変にした場合、変数を immutable にする様に設計する。（多くの場合問題があればコンパイル時にで救ってくれる）
+- 一方で, Scala では`非変`なのでコンパイルの時点でエラーになる.
+
+- `静的型付き言語の型安全性`とは、コンパイル時により多くのプログラミングエラーを捕捉するものであるとするなら、配列の設計は Scala の方が Java より型安全であると言える.
+- Scala で`共変`にした場合, 変数を immutable にする様に設計する（多くの場合問題があればコンパイル時にでエラーを拾ってくれる）.
 
 ```scala
 class Pair1[+A, +B](val a:A, val b:B){
@@ -299,16 +303,24 @@ class Pair1[+A, +B](val a:A, val b:B){
 var pair: Pair[AnyRef, AnyRef] = new Pair[String, String]("foo","bar")
 ```
 
-- `[B >: A]`is a lower type bound. It means that B is constrained to be **a supertype of A**.
-- Similarly `[B <: A]` is an upper type bound, meaning that B is constrained to be **a subtype of A**.
-- `Nothing`は全ての型のサブクラスであるような型を表現する。`Stack[+A]`で共変だとすると、`Stack[Nothing]`型の場合はどんな型の`Stack変数`にでも格納することができる。例えば`Stack[Nothing]`型である EmptyStack インスタンスがあれば、それは、`Stack[Int]`型の変数と`Stack[String]`型の変数の両方に代入することができる。これは`Nothing`は Int や String のサブクラスであり、共変の条件を満たすため。`[B >:A]` B=Int, A=Nothing.
+- `A lower type bound`: `[B >: A]`. It means that B is constrained to be `a supertype of A`.
+- `An upper type bound`: `[B <: A]`. It means that B is constrained to be `a subtype of A`.
+- `Nothing`は全ての型のサブクラスであるような型を表現する。`Stack[+A]`で共変だとすると、`Stack[Nothing]`型の場合はどんな型の`Stack変数`にでも格納することができる:
+  - 例えば`Stack[Nothing]`型である EmptyStack インスタンスがあれば、それは、`Stack[Int]`型の変数と`Stack[String]`型の変数の両方に代入することができる. これは`Nothing`は Int や String のサブクラスであり、共変の条件を満たすため.
+  - `[B >: A]` B=Int, A=Nothing.
 - https://stackoverflow.com/questions/7759361/what-does-b-a-do-in-scala
 - https://gist.github.com/RyotaBannai/2968fa3360d197c81dff4b4174facc38
 - コンパイラは、Stack には A の任意のスーパータイプの値が入れられる可能性があることがわかるようになる。そして、型パラメータ E は共変ではないため、どこに出現しても構わない。このようにして、下限境界を利用して、型安全な Stack と共変性を両立することができる。（refer to `line 211`）
 
 #### Contravariant 反変：共変の反対の概念
 
-- `val g: G[A] = G[B]`とした時に A が B を継承している時に代入が可能。`class G[-A]`と表す。
+- `val g: G[A] = G[B]`とした時に A が B を継承している時に代入が可能
+
+  - `class G[-A]`と表す
+  - `T 型`が`S 型`のサブ型だとすると、`List[S]`は`List[T]` のサブ型になる!(SP369)
+
+- `covariant type T occurs in contravariant position in type T of value x`:
+  - [Ref](https://dtuttleo.github.io/scala/2016/09/25/covariant-type-error.html)
 
 ### Functions
 
@@ -644,6 +656,12 @@ val i = searchFrom(0)
   - Scala のようなホスト言語に DSL (ドメイン固有言語)を埋め込む
   - フレームワークを作成: あるタイミングに実行されるアクションを追跡する
 - 純粋関数型待ち行列:
+
   - 新しい item を追加された行列は、変化しない(SP363)
   - `完全永続(fully persistent)`である
-  
+
+- `型コンストラクタ(type constructors)`: `Queue[T]`のように type parameters を取るクラスやトレイとはそのままでは型として使用できないが、`Queue[Int]`のようにすれば型として使用できるため、型コンストラクタと呼ばれる(SP368)
+  - このように型コンストラクタは、`型ファミリー`を`生成`する
+  - 型コンストラクタはジェネリックトレイト、クラスということもできる.
+- `リスコフ置換原則(Liskov Substitution Principle)`:
+  - U 型が必要とされる全ての場所で、T 型の値が使えるなら、T 型は U 型のサブ型だと考えて良い(SP375)

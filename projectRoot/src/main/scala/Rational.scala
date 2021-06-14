@@ -71,3 +71,8 @@ class Rational(n: Int, d: Int) extends Ordered[Rational] {
   def compare(that: Rational) =
     (this.numer * that.denom) - (that.numer * this.denom)
 }
+
+object Rational {
+  // 1 + new Rational(1) => Rational = 2 / 1
+  implicit def intToRational(x: Int) = new Rational(1)
+}

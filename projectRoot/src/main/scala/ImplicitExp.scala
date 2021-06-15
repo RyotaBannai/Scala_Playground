@@ -40,6 +40,17 @@ object ImplicitExp {
         else maxRest
     }
 
+  // コンテキスト境界
+  def maxList[T: Ordering](elements: List[T]): T =
+    elements match {
+      case List()  => throw new IllegalArgumentException("empty list")
+      case List(x) => x
+      case x :: rest =>
+        val maxRest = maxListImpParm(rest) // 暗黙のうちに (ordering) が追加される
+        if (implicitly[Ordering[T]].gt(x, maxRest)) x
+        else maxRest
+    }
+
   case class Person(age: Int)
   implicit object PersonOrdering extends Ordering[Person] {
     override def compare(x: Person, y: Person): Int = {

@@ -12,4 +12,11 @@ object CollectionExp {
     }
     counts
   }
+
+  def heavyCalc(x: String) = {
+    println("taking my time."); Thread.sleep(100)
+    x.reverse
+  }
+  val myCache = collection.mutable.Map[String, String]()
+  def cachedHeavyCalc(s: String) = myCache.getOrElseUpdate(s, heavyCalc(s))
 }

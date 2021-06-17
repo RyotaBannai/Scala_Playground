@@ -42,10 +42,41 @@ object ForExp {
           column <- 1 to n
           queen = (k, column)
           if isSafe(queen, queens)
-
         } yield queen :: queens
 
     placeQueens(n)
   }
+}
 
+object DBQuery {
+  case class Book(title: String, authors: String*)
+  val books: List[Book] = List(
+    Book("Structure and interpretation of Computer Programs"),
+    Book("Principles of Compiler and Design", "Aho, Alfred", "Ullman, Jeffrey"),
+    Book("Programming in Modula-2", "Wirth, Niklaus"),
+    Book("Elements of ML Programming", "Ullman, Jeffrey"),
+    Book("The Java Language Specification", "Goslin, James", "Joy, Bill")
+  )
+
+  val goslinsBooks =
+    for (book <- books; a <- book.authors if a startsWith "Goslin")
+      yield book.title;
+
+  val javaBooks =
+    for (book <- books; if (book.title indexOf "Java") >= 0)
+      yield book.title
+
+  val authoredMoreThanTwo =
+    for {
+      b1 <- books; b2 <- books
+      if b1 != b2
+      a1 <- b1.authors; a2 <- b2.authors
+      if a1 == a2
+    } yield a1
+
+  // この再帰処理は上位レイアーから結果値を決めていくケース
+  def removeDuplicates[A](xs: List[A]): List[A] = {
+    if (xs.isEmpty) xs
+    else xs.head :: removeDuplicates(xs.tail filter (x => x != xs.head))
+  }
 }

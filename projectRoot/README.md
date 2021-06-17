@@ -732,3 +732,7 @@ val i = searchFrom(0)
       - example. `val cba = "abc".reverse` は、WrappedString ではなく、StringOps へ変換される. これは、WrappedString が定義されているクラスのサブクラスで StringOps が定義されているためである. (SP427)
       - `foo(null)` を呼び出した時にオーバーロードされた関数 foo の引数が Any 型よりも String 型が採用される. これは、String 型の方が Any 型よりも明らかに限定的だからである(SP426)
     - 暗黙の型変換を使う前に、継承、ミックスイン合成、メソッドの多重定義など、他の手段で同様の効果が得られないかどうかを自問自答した方が良い.(SP429)
+- `For Expression Revisited`:
+  - リストと配列などで for 式がサポートされているのは、リストと配列が map, flatMap, withFilter 操作を定義しているからである.(SP451)
+    - この二つ以外にも、`範囲`、`イテレーター`、`ストリーム`、そして`集合の全て`の実装でサポートしている.
+    - これらのメソッドを定義しておけば、自身の型でも for ループを使うことができる.

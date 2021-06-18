@@ -792,3 +792,8 @@ val i = searchFrom(0)
       - [`Java Conversions got @deprecated in Scala 2.13.0`](https://stackoverflow.com/questions/8301947/what-is-the-difference-between-javaconverters-and-javaconversions-in-scala)
     - @deprecated: `import collection.JavaConversions._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3)`
     - `import scala.collection.JavaConverters._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3).asJava`
+- `The Architecture of Scala Collections`:
+  - Scala コレクションフレームワークの主要な設計目標は、全ての演算をできる限り少ない場所で定義し、重複を避けることだった.(理想としては、全てのものを一箇所だけで定義すべきだが、再定義が必要な例外もかなありある.(SP512)) - そのため、ほとんどの演算はコレクションテンプレートで実装されている
+    - トラバーサルは、Traversable の foreach メソッドによって処理され、新しいコレクションの構築は、Builder クラスのインスタンスによって処理される.
+  - `実装トレイト(implementation traits)`: コレクションのジェネリックなビルダとトラバーサルを使うことで、コードの重複を避けて`同じ結果型`の原則を貫いている SP514)
+    - 実装トレイトには Like がサフィックスにつけられている. 例えば、Traversable の実装トレイトは TraversableLike である.

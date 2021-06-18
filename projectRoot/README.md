@@ -780,3 +780,15 @@ val i = searchFrom(0)
     - Array は Seq のサブ型ではないため、そのままでは Seq のメソッド(Traversable トレイトなどで定義されているメソッド等)は使えない. Array に対してそのメソッドを実行すると暗黙な型変換が実行され、ArrayOps へ変換されるためそれらのメソッドを使用することがでいる(SP490)
     - Array オブジェクトを Seq 型の変数に代入するときは、暗黙的に ArrayWrapped 型に変換される(SP489)
     - `Array[T]` のような配列のジェネリック型は、Java には存在しないためコンパイル時に `T => AnyRef` へ変換され、実行時に正確な型に確定される.(SP491)
+  - ビュー: Scala のコレクションは全て`正格`である.(SP497)
+    - `正格`コレクションを遅延的(`非正格`)にするための方法が View を利用することである.
+    - view メソッド:`正格` => `非正格`
+    - force メソッド:`非正格` => `正格`
+  - Iterator:
+    - 位置を先に進めないまま、次の要素をチェックしたいときは、BufferedIterator の head を利用する(SP507)
+    - `val it = Iterator(1, 2); val bit = it.buffered; while(bit.head.isEmpty) {bit.next() };`
+  - Java コレクションとの互換性:
+    - JavaConversions オブジェクトで主要なコレクション型の暗黙の相互変換ができる(SP509)
+      - [`Java Conversions got @deprecated in Scala 2.13.0`](https://stackoverflow.com/questions/8301947/what-is-the-difference-between-javaconverters-and-javaconversions-in-scala)
+    - @deprecated: `import collection.JavaConversions._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3)`
+    - `import scala.collection.JavaConverters._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3).asJava`

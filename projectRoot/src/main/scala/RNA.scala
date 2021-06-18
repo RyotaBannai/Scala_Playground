@@ -29,8 +29,9 @@ object RNA {
       Base.fromInt(groups(idx / N) >> (idx % N * S) & M)
     }
     // 配列バッファはシーケンスの一種であるため、RNA1.fromSeq が適用できる(SP521)
-    override def newBuilder: Builder[Base, RNA1] =
-      new ArrayBuffer[Base] mapResult fromSeq
+    // IndexedSeq の newBuilder に対する必須の再実装
+    override protected[this] def newBuilder: Builder[Base, RNA1] =
+      RNA1.newBuilder
   }
   object RNA1 {
     // グループを表現するために必要なビット数
@@ -46,5 +47,14 @@ object RNA {
       new RNA1(groups, buf.length)
     }
     def apply(bases: Base*) = fromSeq(bases)
+
+    def newBuilder: Builder[Base, RNA1] =
+      new ArrayBuffer[Base] mapResult fromSeq
+
+    implicit def CanBuildFrom: CanBuildFrom[RNA1, Base, RNA1] =
+      new CanBuildFrom[RNA1, Base, RNA1] {
+        def apply(): Builder[Base, RNA1] = newBuilder
+        def apply(from: RNA1): Builder[Base, RNA1] = newBuilder
+      }
   }
 }

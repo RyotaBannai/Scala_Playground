@@ -797,3 +797,5 @@ val i = searchFrom(0)
     - トラバーサルは、Traversable の foreach メソッドによって処理され、新しいコレクションの構築は、Builder クラスのインスタンスによって処理される.
   - `実装トレイト(implementation traits)`: コレクションのジェネリックなビルダとトラバーサルを使うことで、コードの重複を避けて`同じ結果型`の原則を貫いている SP514)
     - 実装トレイトには Like がサフィックスにつけられている. 例えば、Traversable の実装トレイトは TraversableLike である.
+  - IndexedSeq の foreach は自身の apply メソッドを使って、コレクションの全ての　 i 番目の要素を単純に実装していく処理.(SP526)
+    - 他の多くのコレクションメソッドのループ処理を foreach を使って実装しているため、労力を割いて foreach の最適化するだけの価値がある.

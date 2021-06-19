@@ -10,7 +10,7 @@ object XmlExpr {
     val dateObtained: String
     val bookPrice: Int
     val purchasePrice: Int
-    val condition: Intsoidjfd
+    val condition: Int
     override def toString = description
 
     def toXML = <cctherm>

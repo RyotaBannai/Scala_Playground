@@ -6,6 +6,8 @@ class PrefixMap[T]
   var value: Option[T] = None // ノードの対する値
 
   // value が empty でなければサブマップを取得する.
+  // オプション値 ov とクロージャ f(これもオプション値を返す)に対し、ov flatMap f を呼び出すと
+  // of と f が定義されている値を返した時に限り成功する. そうでなければ、ov flatMap f は None を返す(SP529)
   def get(s: String): Option[T] =
     if (s.isEmpty) value
     else suffixes get (s(0)) flatMap (_.get(s substring 1))

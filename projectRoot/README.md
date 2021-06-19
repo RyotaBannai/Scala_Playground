@@ -26,8 +26,9 @@ User.printUser(u)
 - return 式はメソッドから、途中で脱出してメソッドの呼び出し元に返り値を返すための制御構文である.
 - `1 to 10 `は 1 から 10 まで（10 を含む）の範囲で、 `1 until 10` は 1 から 10 まで（10 を含まない）の範囲
 - for + yield で `for-comprehension`
-- Scala のパターンマッチがいわゆる**フォールスルー（fall through）** の動作をしない
+- Scala のパターンマッチがいわゆる`フォールスルー（fall through）`の動作をしない
 - パターンマッチの後にガード式（Boolean 型でないといけない）が使える
+  - 以下のように`シーケンスパターン`を使って List, Array の要素にアクセスすることができる.
 
 ```scala
 mylist match{

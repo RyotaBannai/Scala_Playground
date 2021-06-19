@@ -797,5 +797,11 @@ val i = searchFrom(0)
     - トラバーサルは、Traversable の foreach メソッドによって処理され、新しいコレクションの構築は、Builder クラスのインスタンスによって処理される.
   - `実装トレイト(implementation traits)`: コレクションのジェネリックなビルダとトラバーサルを使うことで、コードの重複を避けて`同じ結果型`の原則を貫いている SP514)
     - 実装トレイトには Like がサフィックスにつけられている. 例えば、Traversable の実装トレイトは TraversableLike である.
-  - IndexedSeq の foreach は自身の apply メソッドを使って、コレクションの全ての　 i 番目の要素を単純に実装していく処理.(SP526)
-    - 他の多くのコレクションメソッドのループ処理を foreach を使って実装しているため、労力を割いて foreach の最適化するだけの価値がある.
+  - IndexedSeq の foreach は自身の apply メソッドを使って、コレクションの全ての i 番目の要素を単純に選択していく処理.(SP526)
+    - 他の多くのコレクションメソッドはループ処理を foreach を使って実装しているため、労力を割いて foreach の最適化するだけの価値がある.
+  - `Patricia(Prractical Algorithm to Retrieve Information Coded in Alphanumeric)`:
+    - 検索キーの後ろに続く文字が、一意の子孫ツリーを決定する木構造を使って、集合やマップを格納する手法(SP526)
+    - 検索キーが`abc`であれば `a -> b -> c` のようにルートから葉まで探索する
+    - Patricia を使って作られた集合は Patricia Trie と言う.
+    - Patricia Trie では、ツリーのシア上位を除き、大半のノードでは、後ろに続くデータはごく少数であるため immutable map に格納した方が効率的.(SP528)
+  - 集合やマップには、MapBuilder クラスのインスタンスとしてデフォルトのビルダーがたついけくるため、newBuilder メソッドを定義する必要はない(SP529)

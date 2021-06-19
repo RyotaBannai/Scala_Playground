@@ -816,3 +816,6 @@ val i = searchFrom(0)
 - `Extractor`:
   - 抽出子: メンバーの一つとして `unapply` というメソッドを持っているオブジェクトである.
   - 抽出子オブジェクトは、値を構築するための `apply` と言う相補的なメソッドを定義していることが多いが、必須ではない
+- XLM:
+  - References:
+    - [Scala で XML を加工する](https://shinharad.hateblo.jp/entry/2018/08/16/091643)

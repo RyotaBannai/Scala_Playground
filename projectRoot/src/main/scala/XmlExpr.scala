@@ -43,6 +43,7 @@ object XmlExpr {
   }
 }
 /*
+// ref https://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
 import XmlExpr._
 val x = create.toXML
 scala.xml.XML.save("src/main/resources/test.xml", x)

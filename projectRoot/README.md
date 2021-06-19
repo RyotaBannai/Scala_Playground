@@ -1,3 +1,8 @@
+### Tricks
+
+- scalac で打ったコマンドを全て表示: `def history = scala.io.Source.fromFile(System.getProperty("user.home") + "/.scala_history").foreach(print); history`
+  - [Ref](https://stackoverflow.com/questions/26946059/grab-scala-repl-history-from-sbt-console/27362850)
+
 ### scala の型
 
 - `var と val`: 型宣言が必要ない(型推論). 基本的には val を使用

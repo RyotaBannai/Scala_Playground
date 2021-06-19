@@ -793,6 +793,7 @@ val i = searchFrom(0)
     - @deprecated: `import collection.JavaConversions._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3)`
     - `import scala.collection.JavaConverters._; val jul: java.util.List[Int] = ArrayBuffer(1,2,3).asJava`
 - `The Architecture of Scala Collections`:
+
   - Scala コレクションフレームワークの主要な設計目標は、全ての演算をできる限り少ない場所で定義し、重複を避けることだった.(理想としては、全てのものを一箇所だけで定義すべきだが、再定義が必要な例外もかなありある.(SP512)) - そのため、ほとんどの演算はコレクションテンプレートで実装されている
     - トラバーサルは、Traversable の foreach メソッドによって処理され、新しいコレクションの構築は、Builder クラスのインスタンスによって処理される.
   - `実装トレイト(implementation traits)`: コレクションのジェネリックなビルダとトラバーサルを使うことで、コードの重複を避けて`同じ結果型`の原則を貫いている SP514)
@@ -805,3 +806,7 @@ val i = searchFrom(0)
     - Patricia を使って作られた集合は Patricia Trie と言う.
     - Patricia Trie では、ツリーのシア上位を除き、大半のノードでは、後ろに続くデータはごく少数であるため immutable map に格納した方が効率的.(SP528)
   - 集合やマップには、MapBuilder クラスのインスタンスとしてデフォルトのビルダーがたついけくるため、newBuilder メソッドを定義する必要はない(SP529)
+
+- `Extractor`:
+  - 抽出子: メンバーの一つとして `unapply` というメソッドを持っているオブジェクトである.
+  - 抽出子オブジェクトは、値を構築するための `apply` と言う相補的なメソッドを定義していることが多いが、必須ではない

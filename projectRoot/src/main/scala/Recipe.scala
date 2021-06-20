@@ -24,12 +24,53 @@ object FruitSalad
       "Stir it all together."
     )
 
-object SimpleDataBase {
-  def allFoods = List(Apple, Orange, Cream, Sugar)
-  def foodNamed(name: String): Option[Food] = allFoods.find(_.name == name)
-  def allRecipes: List[Recipe] = List(FruitSalad)
-
+// モジュールは１つのファイルに納めるには大きすぎることが多いため、
+// トレイトを使って１つのモジュールを複数のファイルに分割すると良い(Mixin する)(SP573)
+trait FoodCategories {
   case class FoodCategory(name: String, foods: List[Food])
+  def allCategories: List[FoodCategory]
+}
+
+trait SimpleFoods {
+  this: FoodCategories =>
+  def allCategories: List[FoodCategory] = Nil
+  object Pear extends Food("Pear")
+  def allFoods = List(Apple, Pear)
+}
+
+// self-type(SP574)
+trait SimpleRecipes {
+  // この trait がミックスインされる具象クラスに関する要求を指定
+  // 他のトレイトとともにミックスインされた時にだけ使われるトレイトでは、
+  // 他のトレイトのミックスインを前提とするように指定できるため(SP574)
+  this: SimpleFoods =>
+  object FruitSalad
+      extends Recipe(
+        "Fruit Salad",
+        List(Apple, Pear),
+        "Mix it all together."
+      )
+  def allRecipes = List(FruitSalad)
+}
+
+abstract class Database extends FoodCategories {
+  def allFoods: List[Food]
+  def allRecipes: List[Recipe]
+  def foodNamed(name: String): Option[Food] = allFoods.find(_.name == name)
+
+}
+
+// データベースごとにブラウザを切り替えられるようにしたい
+abstract class Browser {
+  val database: Database
+  def recipesUsing(food: Food) =
+    database.allRecipes.filter(recipe => recipe.ingredients.contains(food))
+  def displayCategory(category: database.FoodCategory) = {
+    println(category)
+  }
+}
+
+object SimpleDatabase extends Database with SimpleFoods with SimpleRecipes {
   private var categories = List(
     FoodCategory(
       "fruits",
@@ -37,14 +78,9 @@ object SimpleDataBase {
     ),
     FoodCategory("misc", List(Cream, Sugar))
   )
-  def allCategories = categories
+  override def allCategories = categories
 }
 
-object SimpleBrowser {
-  def recipesUsing(food: Food) = SimpleDataBase.allRecipes.filter(recipe =>
-    recipe.ingredients.contains(food)
-  )
-  def displayCategory(category: SimpleDataBase.FoodCategory) = {
-    println(category)
-  }
+object SimpleBrowser extends Browser {
+  val database: Database = SimpleDatabase
 }

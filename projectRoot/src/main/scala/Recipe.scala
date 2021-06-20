@@ -84,3 +84,39 @@ object SimpleDatabase extends Database with SimpleFoods with SimpleRecipes {
 object SimpleBrowser extends Browser {
   val database: Database = SimpleDatabase
 }
+
+object StudentDatabase extends Database {
+  object FrozenFood extends Food("FrozenFood")
+  object HeatItUp
+      extends Recipe(
+        "heat it up",
+        List(FrozenFood),
+        "Microwave the 'food' for 10 minutes"
+      )
+  def allFoods = List(FrozenFood)
+  def allRecipes = List(HeatItUp)
+  def allCategories: List[FoodCategory] = List(
+    FoodCategory("edible", List(FrozenFood))
+  )
+}
+
+object StudentBrowser extends Browser {
+  val database = StudentDatabase
+}
+
+object GotApples {
+  def main(args: Array[String]) = {
+    val db: Database =
+      if (args(0) == "student") StudentDatabase
+      else SimpleDatabase
+    object browser extends Browser {
+      // .type はシングルトン型であることを示す
+      val database: db.type = db
+    }
+    def showCategories = for (category <- db.allCategories)
+      browser.displayCategory(category)
+
+    val apple = SimpleDatabase.foodNamed("Apple").get
+    for (recipe <- browser.recipesUsing(apple)) println(recipe)
+  }
+}

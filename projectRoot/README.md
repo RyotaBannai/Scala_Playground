@@ -841,3 +841,6 @@ val i = searchFrom(0)
       - `関数型`は Java の`デフォルトメソッドを含んだインタフェース`としてコンパイルされるので、Java には SAM のように見える(SP613)
 - `Future と並列処理`:
   - for はシリアライズ（直列化）されつため、複数の Future を渡すときは先に作成する.(SP619)
+  - failed メソッドは失敗した Failure 型を Success 型に変換する(SP623)
+  - sequence: `List[Future[Int]]` -> `Future[List[Int]]` へ変換(SP628)
+  - traverse: `List[Int]` -> `Future[List[Int]]` へ変換

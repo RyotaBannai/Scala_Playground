@@ -844,3 +844,15 @@ val i = searchFrom(0)
   - failed メソッドは失敗した Failure 型を Success 型に変換する(SP623)
   - sequence: `List[Future[Int]]` -> `Future[List[Int]]` へ変換(SP628)
   - traverse: `List[Int]` -> `Future[List[Int]]` へ変換
+- `パーサー・コンビネーター`: 入力言語からソフトウェアが処理できるデータ構造に変換する手段(SP634)
+  - `選択肢`:
+    1. 独自のパーサーを構築する. エキスパートでなければ難しく時間がかかる
+    2. パーサージェネレータ(パーサー生成器)
+    - C 言語なら yacc, bison
+    - Java なら ANTLR. スキャナジェネレーターの lex, flex, JFLEX を併用しなければならない場合も多い
+    3. 言語内 DSL(internal domain specific language)
+    - `文脈自由文法(context-free grammar) `を組み立てる手順に一対一に対応しており、文脈自由文法を理解しやすくしてくれる.
+      - `V → w`:
+        - `V`: `非終端記号`
+        - `w`: `終端記号`と`非終端記号`の（0 個を含む）任意個の並び
+      - 「文脈自由」という用語は前後関係に依存せずに`非終端記号 V を w に置換できる`、という所から来ている

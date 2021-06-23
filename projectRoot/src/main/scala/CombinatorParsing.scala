@@ -49,3 +49,26 @@ object ParseJsonExpr extends JSONParser {
     println(parseAll(value, reader)) // 第二引数に入力リーダーを取ることができる
   }
 }
+
+class JSONParserWithMapping extends JavaTokenParsers {
+  def obj: Parser[Any] = "{" ~> repsep(member, ",") <~ "}" ^^ (Map() ++ _)
+  def arr: Parser[Any] = "[" ~> repsep(value, ",") <~ "]"
+  def member: Parser[(String, Any)] = stringLiteral ~ ":" ~ value ^^ {
+    case name ~ ":" ~ value => (name, value)
+  }
+  def value: Parser[Any] = (obj
+    | arr
+    | stringLiteral
+    | floatingPointNumber ^^ (_.toDouble)
+    | "null" ^^ (x => null)
+    | "true" ^^ (x => true)
+    | "false" ^^ (x => false))
+}
+
+// src/main/resources/sample.json
+object ParseJsonAndMappingExpr extends JSONParserWithMapping {
+  def main(args: Array[String]) = {
+    val reader = new FileReader(args(0))
+    println(parseAll(value, reader))
+  }
+}

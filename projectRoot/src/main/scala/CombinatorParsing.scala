@@ -3,6 +3,7 @@ package combinator_parsing
 import util.parsing.combinator._
 import java.io.{FileReader}
 
+// ~ はバックトラック方式で、~! は LL(1) で効率が良い (SP656)
 class Arith extends JavaTokenParsers {
   // プリミティブな floatingPointNumber parser
   // ~ は合成を表現
@@ -62,7 +63,8 @@ class JSONParserWithMapping extends JavaTokenParsers {
     | floatingPointNumber ^^ (_.toDouble)
     | "null" ^^ (x => null)
     | "true" ^^ (x => true)
-    | "false" ^^ (x => false))
+    | "false" ^^ (x => false)
+    | failure("illegal start of value")) // ?
 }
 
 // src/main/resources/sample.json

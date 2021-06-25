@@ -6,13 +6,43 @@ object ImplicitExp {
   implicit def doubleToInt(x: Double) = x.toInt
 
   /** @example val myRectangle = 10 x 10
+    * > ImplicitExp.Rectangle = Rectangle(10,10)
     */
   case class Rectangle(width: Int, height: Int)
   implicit class RectangleMarker(width: Int) {
     def x(height: Int) = Rectangle(width, height)
   }
-  // implicit def RectangleMarker(width: Int) = new RectangleMarker(width) が自動生成する
+  // implicit def RectangleMarker(width: Int) = new RectangleMarker(width) を自動生成(SP417)
 
+  /** @example fibonacci(30).timed
+    * > The taken: 9 ms
+    * fibonacci には、timed メソッドは無いため implicit conversion が働く.
+    * fibonacci -> MethodBlockUtils -> MethodBlockUtils.timed
+    */
+  implicit class MethodBlockUtils[R](block: => R) { // evaluate lazily
+    def timed: R = {
+      val startTimeMills = System.currentTimeMillis
+      val blockResult: R = block
+      val endTimeMills = System.currentTimeMillis
+      println(s"The taken: ${endTimeMills - startTimeMills} ms")
+      blockResult
+    }
+  }
+  // implicit def MethodBlockUtils[R](block: =>R) = new MethodBlockUtils(block)
+
+  def fibonacci(n: Long): Long = n match {
+    case 0 => 0
+    case 1 => 1
+    case _ => fibonacci(n - 1) + fibonacci(n - 2)
+  }
+
+  // Ref how to use Ordering: https://www.scala-lang.org/api/2.12.1/scala/math/Ordering.html
+  // generic にして汎用化すると、呼び出し側で Ordering を渡してあげる必要がある.
+  // 例えば、Int であれば、https://www.scala-lang.org/api/2.12.8/scala/math/Ordering$$Int$.html
+  /*
+  import scala.math.Ordering.Int
+  maxListOrdering(List(1,3,4))(Int)
+   */
   def maxListOrdering[T](elements: List[T])(ordering: Ordering[T]): T =
     elements match {
       case List()  => throw new IllegalArgumentException("empty list")
@@ -40,13 +70,13 @@ object ImplicitExp {
         else maxRest
     }
 
-  // コンテキスト境界
+  // コンテキスト境界: 暗黙裏に Ordering[T] を導入する(SP425)
   def maxList[T: Ordering](elements: List[T]): T =
     elements match {
       case List()  => throw new IllegalArgumentException("empty list")
       case List(x) => x
       case x :: rest =>
-        val maxRest = maxListImpParm(rest) // 暗黙のうちに (ordering) が追加される
+        val maxRest = maxList(rest) // 暗黙のうちに (ordering) が追加される(SP423)
         if (implicitly[Ordering[T]].gt(x, maxRest)) x
         else maxRest
     }

@@ -1,18 +1,45 @@
 package gui
 
-import swing._
-import event._
+import swing._, event._
 import util.parsing.combinator._
 
 class Model(val height: Int, val width: Int) extends Evaluator with Arithmetic {
-  case class Cell(row: Int, column: Int) {
-    var formula: Formula = Empty
-    def value = evaluate(formula)
+
+  /** ValueChanged: Spreadsheet の reactions でも view の更新に使用
+    * Cell が使うときは、内部データ(value)を書き換えるために使用
+    */
+  case class ValueChanged(cell: Cell) extends event.Event
+  case class Cell(row: Int, column: Int) extends Publisher {
+    private var f: Formula = Empty
+    def formula = f
+    def formula_=(f: Formula) = {
+      // 先にサブを解除して、その後でサブ対象になる Cell をセットするため formula を書き換える.
+      for (c <- references(formula)) deafTo(c)
+      this.f = f
+      for (c <- references(formula)) listenTo(c)
+      value = evaluate(f)
+    }
+
+    private var v: Double = 0
+    def value = v
+    def value_=(w: Double) = {
+      if (!(v == w || v.isNaN && w.isNaN)) {
+        v = w
+        // event を発行するのは、value をセットする時
+        publish(ValueChanged(this))
+      }
+    }
     override def toString = formula match {
       case Textual(s) => s
       case _          => value.toString
     }
-  }
+
+    // Cell が他の Cell の通知をキャッチして再計算
+    reactions += { case ValueChanged(c) =>
+      if (c != this)
+        value = evaluate(formula)
+    }
+  } // end of Cell
 
   val cells = Array.ofDim[Cell](height, width)
   for (i <- 0 until height; j <- 0 until width)
@@ -29,12 +56,6 @@ class Spreadsheet(val height: Int, val width: Int) extends ScrollPane {
     autoResizeMode = Table.AutoResizeMode.Off
     showGrid = true
     gridColor = new java.awt.Color(150, 150, 150)
-
-    reactions += { case TableUpdated(table, rows, column) =>
-      // 単一のセルを編集したら 'Range 1 to 1' のようになる.
-      for (row <- rows)
-        cells(row)(column).formula = FormulaParsers.parse(userData(row, column))
-    }
 
     override protected def rendererComponent(
         isSelected: Boolean,
@@ -57,6 +78,16 @@ class Spreadsheet(val height: Int, val width: Int) extends ScrollPane {
       val v = this(row, column)
       if (v == null) "" else v.toString
     }
+
+    reactions += {
+      case TableUpdated(table, rows, column) =>
+        // 単一のセルを編集したら 'Range 1 to 1' のようになる.
+        for (row <- rows)
+          cells(row)(column).formula =
+            FormulaParsers.parse(userData(row, column))
+      case ValueChanged(cell) => updateCell(cell.row, cell.column)
+    }
+    for (row <- cells; cell <- row) listenTo(cell)
   }
 
   // 行番号を表示.

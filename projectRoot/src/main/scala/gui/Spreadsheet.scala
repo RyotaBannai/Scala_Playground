@@ -4,11 +4,16 @@ import swing._
 import event._
 import util.parsing.combinator._
 
-class Model(val height: Int, val width: Int) {
+class Model(val height: Int, val width: Int) extends Evaluator with Arithmetic {
   case class Cell(row: Int, column: Int) {
     var formula: Formula = Empty
-    override def toString = formula.toString
+    def value = evaluate(formula)
+    override def toString = formula match {
+      case Textual(s) => s
+      case _          => value.toString
+    }
   }
+
   val cells = Array.ofDim[Cell](height, width)
   for (i <- 0 until height; j <- 0 until width)
     // それぞれのセルに Cell のインスタンスを追加.
@@ -36,12 +41,16 @@ class Spreadsheet(val height: Int, val width: Int) extends ScrollPane {
         focused: Boolean,
         row: Int,
         column: Int
-    ): Component = if (hasFocus) new TextField(userData(row, column))
-    else
-      // フォーカスが当たっていないセルは編集できないため label
-      new Label(cells(row)(column).toString) {
-        xAlignment = Alignment.Right
-      }
+    ): Component =
+      // isSelected => whole row
+      // focused => true when cursor is mounted on the cell.
+      if (focused)
+        new TextField(userData(row, column))
+      else
+        // フォーカスが当たっていないセルは編集できないため label
+        new Label(cells(row)(column).toString) {
+          xAlignment = Alignment.Right
+        }
 
     def userData(row: Int, column: Int): String = {
       // this(x, y) は constructor 呼び出しではなく、現在の Table の apply メソッドを呼び出す
@@ -110,6 +119,51 @@ object FormulaParsers extends RegexParsers {
     case f: NoSuccess          => Textual("[" + f.msg + "]")
   }
 } // end of FormulaParsers
+
+trait Evaluator { this: Model =>
+  def evaluate(e: Formula): Double = try {
+    e match {
+      case Coord(row, column) => cells(row)(column).value
+      case Number(v)          => v
+      case Textual(_)         => 0
+      case Application(function, arguments) =>
+        val argvals = arguments flatMap evalList
+        operations(function)(argvals)
+    }
+  } catch {
+    case ex: Exception => Double.NaN
+  }
+
+  type Op = List[Double] => Double
+  val operations = new collection.mutable.HashMap[String, Op]
+  private def evalList(e: Formula): List[Double] = e match {
+    case Range(_, _) => references(e) map (_.value)
+    case _           => List(evaluate(e))
+  }
+
+  /** 数式が参照する全てのセルの値を計算 */
+  def references(e: Formula): List[Cell] = e match {
+    case Coord(row, column) => List(cells(row)(column))
+    case Range(Coord(r1, c1), Coord(r2, c2)) =>
+      for (row <- (r1 to r2).toList; column <- c1 to c2)
+        yield cells(row)(column)
+    // 個々の引数式が参照するセルを一つのリストに連結
+    case Application(function, arguments) => arguments flatMap references
+    case _                                => List()
+  }
+} // end of Evaluator
+
+trait Arithmetic { this: Evaluator =>
+  operations += (
+    "add" -> { case List(x, y) => x + y },
+    "sub" -> { case List(x, y) => x - y },
+    "div" -> { case List(x, y) => x / y },
+    "mul" -> { case List(x, y) => x * y },
+    "mod" -> { case List(x, y) => x % y },
+    "sum" -> { xs => (0.0 /: xs)(_ + _) },
+    "prod" -> { xs => (1.0 /: xs)(_ * _) },
+  )
+} // end of Arithmetic
 
 object SpreadsheetExpr extends SimpleSwingApplication {
   def top = new MainFrame {

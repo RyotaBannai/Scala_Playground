@@ -10,3 +10,6 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
   "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 )
+
+// ignore staled implementations
+unmanagedSources / excludeFilter := HiddenFileFilter || "PrefixMapV2.12.scala" || "RNA2.12.scala"

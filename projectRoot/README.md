@@ -367,6 +367,10 @@ def withFile[A](filename: String)(f: Source => A): A = {
 }
 ```
 
+### Tips
+
+- [`Method Invocation`](https://docs.scala-lang.org/style/method-invocation.html) when `0-, 1- Arity and Higher Order function`
+
 # Scalable Programming
 
 - Int はクラスの`単純名`で、`scala.Int` は`完全名`である. (java.lang.String は完全名で、String は単純名)(SP49)

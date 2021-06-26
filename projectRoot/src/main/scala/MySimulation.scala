@@ -1,5 +1,3 @@
-import MySimulation._
-
 class MySimulation {}
 object MySimulation extends CircuitSimulation {
   override def InvertDelay: Int = 1;

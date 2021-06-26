@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "2.12.14"
+ThisBuild / scalaVersion := "2.13.6"
 
 libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.9",

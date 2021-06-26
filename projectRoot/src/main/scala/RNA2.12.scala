@@ -1,4 +1,4 @@
-package staled
+package scala_212
 
 import collection.IndexedSeqLike
 import collection.mutable.{Builder, ArrayBuffer}

@@ -52,24 +52,25 @@ class PrefixMap[A]
     this
   }
 
+  // Overloading of transformation methods that should return a PrefixMap
   def map[B](f: ((String, A)) => (String, B)): PrefixMap[B] =
     strictOptimizedMap(PrefixMap.newBuilder, f)
   def flatMap[B](f: ((String, A)) => IterableOnce[(String, B)]): PrefixMap[B] =
     strictOptimizedFlatMap(PrefixMap.newBuilder, f)
 
+  // Members declared in scala.collection.mutable.Clearable
   override def clear(): Unit = suffixes = immutable.Map.empty
 
   override def concat[B >: A](suffix: IterableOnce[(String, B)]): PrefixMap[B] =
     strictOptimizedConcat(suffix, PrefixMap.newBuilder)
 
-  override def empty = PrefixMap.empty
-
+  // Members declared in scala.collection.IterableOps
   override protected def fromSpecific(
       coll: IterableOnce[(String, A)]
   ): PrefixMap[A] = PrefixMap.fromSpecific(coll)
-
   override protected def newSpecificBuilder
       : mutable.Builder[(String, A), PrefixMap[A]] = PrefixMap.newBuilder
+  override def empty = PrefixMap.empty
 
   override def className = "PrefixMap"
 }

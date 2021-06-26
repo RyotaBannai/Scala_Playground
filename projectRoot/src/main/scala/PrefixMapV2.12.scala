@@ -1,3 +1,5 @@
+package staled
+
 import collection._
 class PrefixMap[T]
     extends mutable.Map[String, T]

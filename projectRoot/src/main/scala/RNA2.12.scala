@@ -1,3 +1,5 @@
+package staled
+
 import collection.IndexedSeqLike
 import collection.mutable.{Builder, ArrayBuffer}
 import collection.generic.CanBuildFrom

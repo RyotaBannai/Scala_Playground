@@ -369,7 +369,13 @@ def withFile[A](filename: String)(f: Source => A): A = {
 
 ### Tips
 
+- [CanBuildFrom にお別れを](https://blog.tiqwab.com/2018/12/28/rip-can-build-from.html)
 - [`Method Invocation`](https://docs.scala-lang.org/style/method-invocation.html) when `0-, 1- Arity and Higher Order function`
+- [SCALA 2.13 COLLECTIONS REWORK](https://www.scala-lang.org/blog/2017/02/28/collections-rework.html#canbuildfrom)
+- [THE ARCHITECTURE OF SCALA 2.13’S COLLECTIONS](https://docs.scala-lang.org/overviews/core/architecture-of-scala-213-collections.html)
+- [Scala 2.8 breakOut](https://stackoverflow.com/questions/1715681/scala-2-8-breakout)
+- [SCALA 2.13 COLLECTIONS REWORK](https://www.scala-lang.org/blog/2017/02/28/collections-rework.html#views)
+- [Some classes have been removed, made private or have no equivalent in the new design:](https://docs.scala-lang.org/overviews/core/collections-migration-213.html)
 
 # Scalable Programming
 

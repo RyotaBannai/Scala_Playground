@@ -16,3 +16,4 @@
     - `local or inherited definitions`
     - `imported definitions`
     - `definitions in the companion object of the type class or the parameter type (in this case JsonWriter(Type Class) or String(Parameter Type)).`
+- `contravariance`: the `type F[B]` is a subtype of `F[A]` if `A` is a subtype of `B`. (1.6.1)

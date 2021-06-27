@@ -1,4 +1,4 @@
-import cats._, cats.syntax.show._
+import cats._, syntax.show._
 import java.util.Date
 import cats.instances.int._ // Instance
 import cats.instances.string._ // Instance

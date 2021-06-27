@@ -21,7 +21,7 @@ object PrintableInstances {
         val name = Printable.format(value.name)
         val age = Printable.format(value.age)
         val color = Printable.format(value.color)
-        s"${name} is a ${age} year-old ${color} cat."
+        s"$name is a $age year-old $color cat."
       }
     }
 }

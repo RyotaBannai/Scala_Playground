@@ -47,6 +47,7 @@ object Json {
   def toJson[A](value: A)(implicit w: JsonWriter[A]): Json = w.write(value)
 }
 
+// @example Person("Dave", "dave@example.com").toJson
 object JsonSyntax {
   implicit class JsonWriterOps[A](value: A) {
     def toJson(implicit w: JsonWriter[A]): Json = w.write(value)

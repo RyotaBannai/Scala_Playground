@@ -17,3 +17,13 @@
     - `imported definitions`
     - `definitions in the companion object of the type class or the parameter type (in this case JsonWriter(Type Class) or String(Parameter Type)).`
 - `contravariance`: the `type F[B]` is a subtype of `F[A]` if `A` is a subtype of `B`. (1.6.1)
+- Cats use `invariant`:
+  - `Covariant`: picks `More specific type `
+  - `Contravariant`: picks `Supertype instance`
+  - if you'd like to specify more specific instances for subtypes, you can use annotation (such as `Some(1): Option[Int]`) or use "smart constructors" like the `Option.apply`(an apply method for materializing instances. Default instances are provided via objects in the `cats.instances `package)(1.6)
+- `Monoids` and `Semigroups`
+  - `closed`: adding two `Ints` always producds another `Int`
+  - `identity element`: such as 0 for addition, because `2 + 0 == 2`, `0 + 2 == 2` for any `Int`. 1 as the identity for multiplication. And empty string `""` is identity for `Strings`
+  - `associativity`: means it doesn't matter in what order we add elements because we always get the same result.
+    - for Strings, `("One" + "Two") + "Three"` and `"One" + ("Two" + "Three")` are the same, thus it's associative.
+  -

@@ -26,4 +26,10 @@
   - `identity element`: such as 0 for addition, because `2 + 0 == 2`, `0 + 2 == 2` for any `Int`. 1 as the identity for multiplication. And empty string `""` is identity for `Strings`
   - `associativity`: means it doesn't matter in what order we add elements because we always get the same result.
     - for Strings, `("One" + "Two") + "Three"` and `"One" + ("Two" + "Three")` are the same, thus it's associative.
-  -
+- `Eventual consistency`: In a distributed system, different machines may end up with different views of data. For example, one machine may receive an update that other machines did not receive. We would like to reconcile these different views, so `every machine has the same data if no more updates arrive`.
+- A particular class of data types support this reconciliation. These data types are called `commutative replicated data types` (`CRDTs`). The key operation is the ability to merge two data instances, with `a result that captures all the information in both instances`. This operation relies on having a `monoid instance`.
+- Fanctors:
+  - map is a way of sequencing computations on values:
+    - `Option` — the value may or may not be present;
+    - `Either` — there may be a value or an error;
+    - `List` — there may be zero or more values.

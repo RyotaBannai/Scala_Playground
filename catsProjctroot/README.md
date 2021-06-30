@@ -33,3 +33,7 @@
     - `Option` — the value may or may not be present;
     - `Either` — there may be a value or an error;
     - `List` — there may be zero or more values.
+- Future Warning:
+  - Future may not be `referential transparency`.
+  - Future always starts computations immediately rather than allowing the user to dictate when the program should run. For more information see this excellent [Reddit answer by Rob Norris](https://www.reddit.com/r/scala/comments/3zofjl/why_is_future_totally_unusable/):
+    - When we look at `Cats Effect` we’ll see that the IO type solves these problems.

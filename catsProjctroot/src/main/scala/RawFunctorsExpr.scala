@@ -8,7 +8,7 @@ import cats.Functor
 import cats.instances.list._ // for Functor
 import cats.instances.option._ // for Functor
 
-object FunctorExpr {
+object RawFunctorExpr {
   def run(): Unit = {
     val future: Future[String] =
       Future(123)

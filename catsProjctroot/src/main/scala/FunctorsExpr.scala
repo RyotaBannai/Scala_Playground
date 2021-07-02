@@ -8,7 +8,7 @@ import cats.Functor
 import cats.instances.list._ // for Functor
 import cats.instances.option._ // for Functor
 
-object FunctorsExpr {
+object FunctorExpr {
   def run(): Unit = {
     val future: Future[String] =
       Future(123)
@@ -66,5 +66,40 @@ object UseFunctor {
   // Custom Type. cats has cats.instances.option
   implicit val optionFunctor: Functor[Option] = new Functor[Option] {
     def map[A, B](value: Option[A])(func: A => B): Option[B] = value.map(func)
+  }
+}
+
+object BranchingOut {
+  sealed trait Tree[+A]
+  final case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+  final case class Leaf[A](value: A) extends Tree[A]
+
+  implicit val treeFunctor: Functor[Tree] =
+    new Functor[Tree] {
+      def map[A, B](tree: Tree[A])(func: A => B): Tree[B] = tree match {
+        case Branch(left, right) => Branch(map(left)(func), map(right)(func))
+        case Leaf(value)         => Leaf(func(value))
+      }
+    }
+
+  /* 'Smart constructors' without this, we will get an error like below
+   * Branch(Leaf(10), Leaf(20)).map(_ * 2)
+   * error: value map is not a member of BranchingOut.Branch[Int] ..
+   * -> this means Scala compiler is looking for Functor for Branch not Tree, which we only defined.
+   *
+   * So improve to explicitly convert the type from Branch to Tree:
+   * Tree.branch(Tree.leaf(10), Tree.leaf(20)).map(_ * 2)
+   * => BranchingOut.Tree[Int] = Branch(Leaf(20),Leaf(40))
+   *
+   * Or even do like:
+   * Tree.branch(
+   *  Tree.branch(Tree.leaf(10), Tree.leaf(20)).map(_ * 2),
+   *  Tree.branch(Tree.leaf(30), Tree.leaf(40)).map(_ * 2)
+   * )
+   *
+   */
+  object Tree {
+    def branch[A](left: Tree[A], right: Tree[A]): Tree[A] = Branch(left, right)
+    def leaf[A](value: A): Tree[A] = Leaf(value)
   }
 }

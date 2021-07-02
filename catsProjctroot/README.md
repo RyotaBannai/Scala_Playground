@@ -28,7 +28,13 @@
     - for Strings, `("One" + "Two") + "Three"` and `"One" + ("Two" + "Three")` are the same, thus it's associative.
 - `Eventual consistency`: In a distributed system, different machines may end up with different views of data. For example, one machine may receive an update that other machines did not receive. We would like to reconcile these different views, so `every machine has the same data if no more updates arrive`.
 - A particular class of data types support this reconciliation. These data types are called `commutative replicated data types` (`CRDTs`). The key operation is the ability to merge two data instances, with `a result that captures all the information in both instances`. This operation relies on having a `monoid instance`.
-- Fanctors:
+- Functors:
+  - `classes that encapsulates sequencing computations`
+  - `Functor Laws`:
+    - `Identity`: calling map with the identity function is the same as doing nothing:
+      - `fa.map(a => a) == fa`
+    - `Composition`: mapping with two functions `f` and `g` is the same as mapping with `f` and then mapping with `g`:
+      - `fa.map(g(f(_))) == fa.map(f(_)).map(g)`
   - map is a way of sequencing computations on values:
     - `Option` — the value may or may not be present;
     - `Either` — there may be a value or an error;
@@ -37,3 +43,10 @@
   - Future may not be `referential transparency`.
   - Future always starts computations immediately rather than allowing the user to dictate when the program should run. For more information see this excellent [Reddit answer by Rob Norris](https://www.reddit.com/r/scala/comments/3zofjl/why_is_future_totally_unusable/):
     - When we look at `Cats Effect` we’ll see that the IO type solves these problems.
+- `Kinds` are like `types for types`. They describe the number of `'holes' in a type`:
+  - We distinguish between `regular types that have no holes` and `'type constructors' that have holes we can fill to produce types`.
+  - `List`: type constructor(or `higher kinded type`):
+    - In Scala we declare type constructors using underscores:
+      - `def myMethod[F[_]] = { ... }`
+  - `List[Int]`: regular type
+  - `List[A]`: regular type, but generic type as well.

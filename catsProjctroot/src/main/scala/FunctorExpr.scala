@@ -1,5 +1,5 @@
 import cats.Contravariant
-import cats.syntax.contravariant._
+import cats.syntax.contravariant._ // for contramap
 import cats.Show
 import cats.instances.string._
 
@@ -29,7 +29,7 @@ object FunctorExpr {
   // it's converted from Symbol to String by contravariant.
   // String = 'dave'
 
-  // or
+  // or with 'contravariant'
   showString
     .contramap[Symbol](sym => s"'${sym.name}'")
     .show(Symbol("dave"))
@@ -48,4 +48,20 @@ object FunctorExpr {
   We can implement combine using imap,
   passing functions of type String => Symbol and Symbol => String as parameters
    */
+
+  // import cats.Functor
+  // import cats.instances.function._
+  // import cats.syntax.functor._
+  // import cats.syntax.contravariant._
+
+  // val func1 = (x: Int) => x.toDouble
+  // val func2 = (y: Double) => y * 2
+  // Hypothetical example. This won't actually compile:
+  // val func3c: Int => Double = func2.contramap(func1)
+
+  // needs to be done these below to actually work things out:
+  // type <=[B, A] = A => B
+  // type F[A] = Double <= A
+  // val func2b: Double <= Double = func2
+  // val func3c = func2b.contramap(func1)
 }

@@ -50,3 +50,13 @@
       - `def myMethod[F[_]] = { ... }`
   - `List[Int]`: regular type
   - `List[A]`: regular type, but generic type as well.
+- `Monad`:
+  - a mechanism for sequencing computations(Monads are all about sequencing).
+  - `pure` abstracts over constructors, providing `a way to create a new monadic context from a plain value`.
+  - `Monad Laws`:
+    - `Left identity`: calling pure and transforming the result with func is the same as calling func:
+      - `pure(a).flatMap(func) == func(a)`
+    - `Right identity`: passing pure to flatMap is the same as doing nothing:
+      - `m.flatMap(pure) == m`
+    - `Associativity`: flatMapping over two functions f and g is the same as flatMapping over f and then flatMapping over g:
+      - `m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))`

@@ -60,3 +60,7 @@
       - `m.flatMap(pure) == m`
     - `Associativity`: flatMapping over two functions f and g is the same as flatMapping over f and then flatMapping over g:
       - `m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))`
+- `Eval`:
+  - `call-by-need evaluation`: `a result to be memoized`
+  - `stack-safe`: we can use it in very deep recursions without blowing up the stack.
+    - we must bear in mind that `trampolining is not free`. It avoids consuming `stack` `by creating a chain of function objects on the heap`. There are still limits on how deeply we can nest computations, but `they are bounded by the size of the heap rather than the stack`.

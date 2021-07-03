@@ -64,3 +64,7 @@
   - `call-by-need evaluation`: `a result to be memoized`
   - `stack-safe`: we can use it in very deep recursions without blowing up the stack.
     - we must bear in mind that `trampolining is not free`. It avoids consuming `stack` `by creating a chain of function objects on the heap`. There are still limits on how deeply we can nest computations, but `they are bounded by the size of the heap rather than the stack`.
+- `Writer Monad`:
+  - Deal with log and result at one time, but either of them is always optional to deal with.
+  - With `Writer` the `log` for the computation is tied to the `result`, so `we can run concurrent computations without mixing logs`!!
+  - We can extract the `result` and `log` from a Writer using the `value` and `written` methods respectively:

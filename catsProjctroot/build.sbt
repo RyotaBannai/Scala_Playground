@@ -8,6 +8,7 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % "2.1.0"
 )
+libraryDependencies ++= Seq("com.lihaoyi" %% "pprint" % "0.5.6")
 
 scalacOptions ++= Seq(
   "-Xfatal-warnings"

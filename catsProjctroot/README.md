@@ -68,3 +68,7 @@
   - Deal with log and result at one time, but either of them is always optional to deal with.
   - With `Writer` the `log` for the computation is tied to the `result`, so `we can run concurrent computations without mixing logs`!!
   - We can extract the `result` and `log` from a Writer using the `value` and `written` methods respectively:
+- `State`:
+  - `an instance of State` is a `function` that does two things:
+    - transforms an input state to an output state
+    - computes a result

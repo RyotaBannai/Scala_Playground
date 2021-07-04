@@ -75,3 +75,8 @@
   - `run`: `run our monad by supplying an initial state`.
     - `runS`: get the state, ignore the result
     - `runA`: get the result, ignore the state
+- `flatMap` can be viewed as an `operator for sequencing computations`, dictating the order in which operations must happen. From this viewpoint:
+  - `Option` represents a computation that can fail without an error message
+  - `Either` represents computations that can fail with a message
+  - `List` represents multiple possible results
+  - `Future` represents a computation that may produce a value at some point in the future.

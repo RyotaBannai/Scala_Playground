@@ -72,3 +72,6 @@
   - `an instance of State` is a `function` that does two things:
     - transforms an input state to an output state
     - computes a result
+  - `run`: `run our monad by supplying an initial state`.
+    - `runS`: get the state, ignore the result
+    - `runA`: get the result, ignore the state

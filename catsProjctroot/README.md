@@ -76,7 +76,19 @@
     - `runS`: get the state, ignore the result
     - `runA`: get the result, ignore the state
 - `flatMap` can be viewed as an `operator for sequencing computations`, dictating the order in which operations must happen. From this viewpoint:
+
   - `Option` represents a computation that can fail without an error message
   - `Either` represents computations that can fail with a message
   - `List` represents multiple possible results
   - `Future` represents a computation that may produce a value at some point in the future.
+
+- `Monad Transformer`:
+  - `The monad transformer classes`:
+    - `OptionT` for Option
+    - `EitherT` for Either
+    - `ReaderT` for Reader
+    - `WriterT` for Writer
+    - `StateT` for State
+    - `IdT` for Id
+  - build `Monad stacks` from the inside out:
+    - `type ListOption[A] = OptionT[List, A]` (List -> Option from inside)

@@ -100,13 +100,33 @@ object UsagePatterns {
 }
 
 object MonadTransformerRollOut {
-  type FutureEither[A] = EitherT[Future, String, A]
+  type Response[A] = EitherT[Future, String, A]
   val powerLevels = Map(
     "Jazz" -> 6,
     "Bumblebee" -> 8,
     "Hot Rod" -> 10
   )
 
-  // def get powerLevel(autobot: String): Response[Int] = ???
+  def powerLevel(ally: String): Response[Int] =
+    powerLevels.get(ally) match {
+      case Some(a) => EitherT.right(Future(a))
+      case None    => EitherT.left(Future(s"$ally unreachable"))
+    }
 
+  // Either is right biased, thus one Left value occurrence
+  // causes an entire failure. Check out 4.4 Either section.
+  def canSpecialMove(ally1: String, ally2: String): Response[Boolean] =
+    for {
+      power1 <- powerLevel(ally1)
+      power2 <- powerLevel(ally2)
+    } yield (power1 + power2) > 15
+
+  def tacticalReport(ally1: String, ally2: String): String = {
+    val stack = canSpecialMove(ally1, ally2).value
+    Await.result(stack, 1.second) match {
+      case Left(msg)    => s"Comms error: $msg"
+      case Right(true)  => s"ally1 and ally2 are ready to roll out!"
+      case Right(false) => s"ally2 and ally2 need a recharge."
+    }
+  }
 }

@@ -98,3 +98,15 @@ object UsagePatterns {
   addAll("1", "2", "3")
    */
 }
+
+object MonadTransformerRollOut {
+  type FutureEither[A] = EitherT[Future, String, A]
+  val powerLevels = Map(
+    "Jazz" -> 6,
+    "Bumblebee" -> 8,
+    "Hot Rod" -> 10
+  )
+
+  // def get powerLevel(autobot: String): Response[Int] = ???
+
+}

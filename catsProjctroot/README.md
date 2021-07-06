@@ -92,3 +92,12 @@
     - `IdT` for Id
   - build `Monad stacks` from the inside out:
     - `type ListOption[A] = OptionT[List, A]` (List -> Option from inside)
+- `What Functor and Monad can't`:
+  1. they can't return all errors, thus they're not for form `validation`.
+  2. `map` and `flatMap` aren’t quite capable of capturing what we want because they make the assumption that `each computation is dependent on the previous one`, so they can't computation concurrently.
+- `Semigroupal`: a type class that allows us to `combine contexts`. If we have two objects of type `F[A]` and `F[B]`, a `Semigroupal[F]` allows us to combine them to form an `F[(A, B)]` -> the order of these objects doesn't matter.
+  - `Semigroupal Laws`: the `product method` must be `associative`.
+    - `product(a, product(b, c)) == product(product(a, b), c)`
+  - `tupled` method: implicitly added to the tuple of `Options`. It uses the `Semigroupal` for `Option` to zip the values inside the `Options`, creating a single `Option of a tuple`:
+    - `(Option(123), Option("abc")).tupled`
+  - `mapN`: accepts an `implicit Functor` and a function of the correct arity to `combine` the values.

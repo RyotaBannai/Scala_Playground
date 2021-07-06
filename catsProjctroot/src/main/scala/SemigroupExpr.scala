@@ -4,6 +4,14 @@ import cats.Semigroupal
 import cats.instances.option._ // for Semigroupal
 import cats.syntax.apply._ // for tupled and mapN
 
+import cats.Monoid
+import cats.instances.int._ // for Monoid
+import cats.instances.invariant._ // for Semigroupal
+import cats.instances.list._ // for Monoid
+import cats.instances.string._ // for Monoid
+
+import cats.syntax.semigroup._ // for |+|
+
 object FailedPatterns {
   def parseInt(str: String): Either[String, Int] = Either
     .catchOnly[NumberFormatException](str.toInt)
@@ -24,11 +32,34 @@ object SemigroupExpr {
   // if either parameters to None, the entire result is None.
 
   // mapN
-  final case class Cat(name: String, born: Int, color: String)
-  val maybeCat =
-    (Option("Garfield"), Option(1999), Option("Orange & Black")).mapN(Cat.apply)
-
   // 2 arities.
   val add: (Int, Int) => Int = (a, b) => a + b
   val maybeInt = (Option(1), Option(2)).mapN(add)
+
+  final case class Cat(name: String, born: Int, color: String)
+  val maybeCat =
+    (Option("Garfield"), Option(1999), Option("Orange & Black")).mapN(Cat.apply)
+  /*
+  Internally mapN uses the Semigroupal to extract the values from the Option and the Functor to apply the values to the function.
+   */
+
+}
+object FancyFunctors {
+  final case class Cat(
+      name: String,
+      yearOfBirth: Int,
+      favoriteFoods: List[String]
+  )
+
+  val tupleToCat: (String, Int, List[String]) => Cat = Cat.apply _
+  val catToTuple: Cat => (String, Int, List[String]) = cat =>
+    (cat.name, cat.yearOfBirth, cat.favoriteFoods)
+
+  implicit val catMonoid: Monoid[Cat] =
+    (Monoid[String], Monoid[Int], Monoid[List[String]])
+      .imapN(tupleToCat)(catToTuple)
+
+  val garfield = Cat("Garfield", 1978, List("Lasagne"))
+  val heathcliff = Cat("Heathcliff", 1988, List("Junk Food"))
+  val res = garfield |+| heathcliff
 }

@@ -100,4 +100,4 @@
     - `product(a, product(b, c)) == product(product(a, b), c)`
   - `tupled` method: implicitly added to the tuple of `Options`. It uses the `Semigroupal` for `Option` to zip the values inside the `Options`, creating a single `Option of a tuple`:
     - `(Option(123), Option("abc")).tupled`
-  - `mapN`: accepts an `implicit Functor` and a function of the correct arity to `combine` the values.
+  - `mapN`: Cats' `apply` syntax provides a method called `mapN` that accepts an `implicit Functor` and a function of the correct arity to `combine` the values.

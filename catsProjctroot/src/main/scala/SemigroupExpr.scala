@@ -11,8 +11,9 @@ import cats.instances.list._ // for Monoid
 import cats.instances.string._ // for Monoid
 
 import cats.syntax.semigroup._ // for |+|
+
 import cats.instances.future._ // for Semigroupal
-import cats.concurrent._
+import scala.concurrent._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -70,7 +71,10 @@ object FancyFunctors {
 }
 
 object SemigroupalAppliedToDifferentTypes {
+  // implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+
   val futurePair = Semigroupal[Future].product(Future("Hello"), Future(123))
 
-  Await.result(futurePair, 1.second)
+  // bug on repl: https://stackoverflow.com/questions/45592069/cats-future-monad-giving-runtime-exception
+  // val re = Await.result(futurePair, 2.second)
 }

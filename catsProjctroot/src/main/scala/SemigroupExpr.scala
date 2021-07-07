@@ -11,6 +11,10 @@ import cats.instances.list._ // for Monoid
 import cats.instances.string._ // for Monoid
 
 import cats.syntax.semigroup._ // for |+|
+import cats.instances.future._ // for Semigroupal
+import cats.concurrent._
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object FailedPatterns {
   def parseInt(str: String): Either[String, Int] = Either
@@ -44,6 +48,7 @@ object SemigroupExpr {
    */
 
 }
+
 object FancyFunctors {
   final case class Cat(
       name: String,
@@ -62,4 +67,10 @@ object FancyFunctors {
   val garfield = Cat("Garfield", 1978, List("Lasagne"))
   val heathcliff = Cat("Heathcliff", 1988, List("Junk Food"))
   val res = garfield |+| heathcliff
+}
+
+object SemigroupalAppliedToDifferentTypes {
+  val futurePair = Semigroupal[Future].product(Future("Hello"), Future(123))
+
+  Await.result(futurePair, 1.second)
 }

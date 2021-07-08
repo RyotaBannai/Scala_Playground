@@ -102,6 +102,11 @@ object Parallel {
   val res2 = (success1, success2).parMapN(addTwo) // Right(3)
   val res3 = (success1, error1).parMapN(addTwo) // Left(Vector(Error 1))
 
+  val res4 = (List(1, 2), List(3, 4)).tupled
+  // List[(Int, Int)] = List((1,3), (1,4), (2,3), (2,4))
+  val res5 = (List(1, 2), List(3, 4)).parTupled
+  // List[(Int, Int)] = List((1,3), (2,4))
+
   /* The definition of Parallel
     trait Parallel[M[_]] {
       type F[_]
@@ -116,8 +121,19 @@ object Parallel {
     - there must be a Monad instance for M;
     - there is a related type constructor F that has an Applicative instance; and
     - we can convert M to F.
+   */
+  import cats.arrow.FunctionK
 
-    ~> : a type alias for FunctionK and is what performs the conversion from M to F.
-    Remember that M and F are not types; they are type constructors
+  object optionToList extends FunctionK[Option, List] {
+    def apply[A](fa: Option[A]): List[A] =
+      fa match {
+        case None    => List.empty[A]
+        case Some(a) => List(a)
+      }
+  }
+
+  /*
+  optionToList(Some(1))
+  optionToList(None)
    */
 }

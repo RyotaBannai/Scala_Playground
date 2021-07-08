@@ -111,3 +111,7 @@
   - `Why bother with Semigroupal?`:
     - we can create useful data types that have instances of `Semigroupal` (and `Applicative`) but not `Monad`.
       - This frees us to implement `product` `in different ways`.
+  - `~>` : a type alias for `FunctionK` and is what performs the conversion from M to F.
+    - Remember that M and F are not `types`; they are `type constructors`
+  - `A => B` converts values of `type A` to values of `type B`
+  - `FunctionK M ~> F`: converts a function from `a value with type M[A]` to `a value with type F[A]`

@@ -115,3 +115,10 @@
     - Remember that M and F are not `types`; they are `type constructors`
   - `A => B` converts values of `type A` to values of `type B`
   - `FunctionK M ~> F`: converts a function from `a value with type M[A]` to `a value with type F[A]`
+- `Applicative`:
+  - Semigroupal provide `an applicative functor`, `applicative` for short.
+  - `ap`: a method that applies a parameter to a function within a context. `cats.Apply`
+  - `pure`: a method to create `a new monadic context from a plain value`. `cats.Applicative`
+  - `Applicative[F[_]]` extends `Apply[F]`
+  - `The Hierarchy of Sequencing Type Classes`:
+    - `Apply` defines `product` in terms of `ap` and `map`, `Monad` defines `product`, `ap`, and `map`, in terms of `pure` and `flatMap`

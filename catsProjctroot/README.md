@@ -52,6 +52,7 @@
   - `List[A]`: regular type, but generic type as well.
 - `Monad`:
   - a mechanism for sequencing computations(Monads are all about sequencing).
+  - extends `Semigroupal`
   - `pure` abstracts over constructors, providing `a way to create a new monadic context from a plain value`.
   - `Monad Laws`:
     - `Left identity`: calling pure and transforming the result with func is the same as calling func:
@@ -101,3 +102,12 @@
   - `tupled` method: implicitly added to the tuple of `Options`. It uses the `Semigroupal` for `Option` to zip the values inside the `Options`, creating a single `Option of a tuple`:
     - `(Option(123), Option("abc")).tupled`
   - `mapN`: Cats' `apply` syntax provides a method called `mapN` that accepts an `implicit Functor` and a function of the correct arity to `combine` the values.
+  - `List` and `Either` have a surprising behaviours:
+    - List: product is `the cartesian product` of their elements:
+    - Either: `product` method still works in the same `fail-fast behaviour` as flatMap and map.
+    - `The reason for the surprising results for them is that they are both monads`(when call `product` on a type that has a `Monad instance` we get `sequential semantics`).
+      - The definition of product of them:
+        - `def product[F[_]: Monad, A, B](x: F[A], y: F[B]): F[(A, B)] = x.flatMap(a => y.map(b => (a, b)))`
+  - `Why bother with Semigroupal?`:
+    - we can create useful data types that have instances of `Semigroupal` (and `Applicative`) but not `Monad`.
+      - This frees us to implement `product` `in different ways`.

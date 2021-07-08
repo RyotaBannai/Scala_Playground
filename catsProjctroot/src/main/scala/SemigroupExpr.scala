@@ -71,10 +71,53 @@ object FancyFunctors {
 }
 
 object SemigroupalAppliedToDifferentTypes {
-  // implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
-
+  // The two Futures start executing the moment we create them,
+  // so they are already calculating results by the time we call product.
   val futurePair = Semigroupal[Future].product(Future("Hello"), Future(123))
 
   // bug on repl: https://stackoverflow.com/questions/45592069/cats-future-monad-giving-runtime-exception
   // val re = Await.result(futurePair, 2.second)
+}
+
+object Parallel {
+  import cats.Semigroupal
+  import cats.instances.either._ // ofr Semigrooupal
+  import cats.syntax.apply._ // for tupled and mapN
+  import cats.instances.vector._
+  import cats.syntax.parallel._ // for parTupled
+
+  type ErrorOr[A] = Either[Vector[String], A]
+  val error1: ErrorOr[Int] = Left(Vector("Error 1"))
+  val error2: ErrorOr[Int] = Left(Vector("Error 2"))
+
+  val failFast = (error1, error2).tupled
+  val notFailFast = (error1, error2).parTupled
+
+  // parMapN
+  val success1: ErrorOr[Int] = Right(1)
+  val success2: ErrorOr[Int] = Right(2)
+  val addTwo = (x: Int, y: Int) => x + y
+
+  val res1 = (error1, error2).parMapN(addTwo) // Left(Vector(Error 1, Error 2))
+  val res2 = (success1, success2).parMapN(addTwo) // Right(3)
+  val res3 = (success1, error1).parMapN(addTwo) // Left(Vector(Error 1))
+
+  /* The definition of Parallel
+    trait Parallel[M[_]] {
+      type F[_]
+
+      def applicative: Applicative[F]
+      def monad: Monad[M]
+      def parallel: ~>[M, F]
+    }
+
+    if there is a Parallel instance for some type constructor M then:
+
+    - there must be a Monad instance for M;
+    - there is a related type constructor F that has an Applicative instance; and
+    - we can convert M to F.
+
+    ~> : a type alias for FunctionK and is what performs the conversion from M to F.
+    Remember that M and F are not types; they are type constructors
+   */
 }

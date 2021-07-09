@@ -139,3 +139,4 @@
       - start wit a `List[Future[A]]`
       - end up with a `Future[List[A]]`
     - These allow us to `iterate over a sequence of Futures` and `accumulate a result`.
+    - We can turn an `F[G[A]]` into a `G[F[A]]` for any `F` with an instance of `Traverse` and any `G` with an instance of `Applicative`.

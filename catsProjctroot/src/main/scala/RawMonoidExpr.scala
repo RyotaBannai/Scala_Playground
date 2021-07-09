@@ -3,7 +3,7 @@ package raw_monaid_expr
 // Monoid: has to follow these rules.
 // Integer subtraction is not a monoid because subtraction is not associative:
 // (1 - 2) -3 !== 1 - (2 -3)
-// Semigroup: is just the combiine part of a monoid, without the empty part
+// Semigroup: is just the combine part of a monoid, without the empty part
 
 object CheckMonoidsHelpers {
   def associativeLaw[A](x: A, y: A, z: A)(implicit m: Monoid[A]): Boolean = {

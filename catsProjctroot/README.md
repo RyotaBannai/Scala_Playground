@@ -140,3 +140,10 @@
       - end up with a `Future[List[A]]`
     - These allow us to `iterate over a sequence of Futures` and `accumulate a result`.
     - We can turn an `F[G[A]]` into a `G[F[A]]` for any `F` with an instance of `Traverse` and any `G` with an instance of `Applicative`.
+- `ExecutionContext.Implicits.global`:
+  - This default context allocates a thread pool with one thread per CUP in our machine.
+- There are Monoids for:
+  - approximate sets such as the Bloom filter;
+  - set cardinality estimators, such as the HyperLogLog algorithm;
+  - vectors and vector operations like stochastic gradient descent;
+  - quantile estimators such as the t-digest

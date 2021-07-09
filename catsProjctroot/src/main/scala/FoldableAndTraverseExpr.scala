@@ -74,4 +74,82 @@ object FoldableExpr {
   // sum(List(1,2,3)) // 6
 }
 
-object TraverseExpr {}
+object RawTraverseMethods {
+  import scala.concurrent._
+  import scala.concurrent.duration._
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  val hostnames = List(
+    "alpha.example.com",
+    "beta.example.com",
+    "gamma.example.com"
+  )
+  // this method doesn't make any sense. just for demonstration
+  def getUptime(hostname: String): Future[Int] = Future(hostname.length * 60)
+
+  // old combinator.
+  val allUptimes: Future[List[Int]] =
+    hostnames.foldLeft(Future(List.empty[Int])) { (acc, host) =>
+      val uptime = getUptime(host)
+      for {
+        acc <- acc // List[Int] <- Future[List[Int]]
+        uptime <- uptime // Int <- Future[Int]
+      } yield acc :+ uptime // List[Int]
+    }
+  // Await.result(allUptimes, 1.second)
+
+  val allUptimesWithTraverse: Future[List[Int]] =
+    Future.traverse(hostnames)(getUptime)
+}
+
+object TraverseWithApplicativesExpr {
+  import scala.concurrent._
+  import scala.concurrent.duration._
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  import cats.Applicative
+  import cats.instances.future._ // for Applicative
+  import cats.syntax.applicative._ // for pure
+
+  /*
+  // these are the same.
+  Future(List.empty[Int])      // Applicative
+  List.empty[Int].pure[Future] // Applicative
+   */
+
+  val hostnames = List(
+    "alpha.example.com",
+    "beta.example.com",
+    "gamma.example.com"
+  )
+  def getUptime(hostname: String): Future[Int] = Future(hostname.length * 60)
+  def oldCombine(acc: Future[List[Int]], host: String): Future[List[Int]] = {
+    val uptime = getUptime(host)
+    for {
+      acc <- acc // List[Int] <- Future[List[Int]]
+      uptime <- uptime // Int <- Future[Int]
+    } yield acc :+ uptime // List[Int]
+  }
+
+  import cats.syntax.apply._ // for mapN
+  def newCombine(acc: Future[List[Int]], host: String): Future[List[Int]] =
+    (acc, getUptime(host)).mapN(_ :+ _) // appended
+
+  // generalise it
+  // List[A], A => F[A], F[List[A]]
+  def listTraverse[F[_]: Applicative, A, B](list: List[A])(
+      func: A => F[B]
+  ): F[List[B]] = list.foldLeft(List.empty[B].pure[F]) { (acc, i) =>
+    (acc, func(i)).mapN(_ :+ _)
+  }
+
+  // listTraverse(hostnames)(getUptime)
+  // val res1: scala.concurrent.Future[List[Int]] = Future(Success(List(1020, 960, 1020)))
+
+  def listSequence[F[_]: Applicative, A](list: List[F[A]]): F[List[A]] =
+    // list.foldLeft(List.empty[A].pure[F]) { (acc, i) => (acc, i).mapN(_ :+ _) }
+    // def identity[A](x: A): A (A method that returns its input value.)
+    listTraverse(list)(identity)
+
+  // Await.result(listSequence(List(Future(1), Future(2), Future(3))), 1.second) // List(1, 2, 3)
+}

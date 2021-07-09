@@ -123,9 +123,19 @@
   - `The Hierarchy of Sequencing Type Classes`:
     - `Apply` defines `product` in terms of `ap` and `map`, `Monad` defines `product`, `ap`, and `map`, in terms of `pure` and `flatMap`
 - `Foldable and Traverse`:
-  - cats' `foldRight` is stack-safe because of using `Eval`
-  - scala's collection default definition of `foldRight` is not:
-    - for example, the default implementation of `foldRight` for `LazyList` is not stack safe, and will cause `StackOverflowError`.
-    - Stack safety isn’t typically an issue when using the standard library. `List` and `Vector` are stack safe of foldRight, but `Stream` is not.
-  - `compose`: supports deep traversal of nested sequences:
-    - `val ints = List(Vector(1,2,3), Vector(4,5,6)); (Foldable[List] compose Foldable[Vector]).combineAll(ints) // 21`
+  - `Foldable`:
+    - cats' `foldRight` is stack-safe because of using `Eval`
+    - scala's collection default definition of `foldRight` is not:
+      - for example, the default implementation of `foldRight` for `LazyList` is not stack safe, and will cause `StackOverflowError`.
+      - Stack safety isn’t typically an issue when using the standard library. `List` and `Vector` are stack safe of foldRight, but `Stream` is not.
+    - `compose`: supports deep traversal of nested sequences:
+      - `val ints = List(Vector(1,2,3), Vector(4,5,6)); (Foldable[List] compose Foldable[Vector]).combineAll(ints) // 21`
+  - `Traverse`:
+    - `Future.traverse`:
+      - start with a `List[A]`
+      - provide a function `A => Future[A]`
+      - end up with a `Future[List[A]]`
+    - `Future.sequence`:
+      - start wit a `List[Future[A]]`
+      - end up with a `Future[List[A]]`
+    - These allow us to `iterate over a sequence of Futures` and `accumulate a result`.

@@ -33,7 +33,7 @@ object FailedPatterns {
 object SemigroupExpr {
   Semigroupal[Option].product(Some(123), Some("abc"))
   // Option[(Int, String)] = Some((123,abc))
-  // if both parameters are instances of Some, we end up with a tuple of hte values within.
+  // if both parameters are instances of Some, we end up with a tuple of the values within.
   // if either parameters to None, the entire result is None.
 
   // mapN

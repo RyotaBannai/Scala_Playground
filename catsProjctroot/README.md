@@ -147,3 +147,6 @@
   - set cardinality estimators, such as the HyperLogLog algorithm;
   - vectors and vector operations like stochastic gradient descent;
   - quantile estimators such as the t-digest
+- Predicates:
+  - `Identity law` encoding the notion that a predicate `always returns its input if it succeeds`:
+    - For a predicate `p` of type `Predicate[E, A]` and elements `a1` and `a2` of type `A`, if `p(a1) == Success(a2)` then `a1 == a2`

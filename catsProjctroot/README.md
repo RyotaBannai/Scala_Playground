@@ -147,6 +147,16 @@
   - set cardinality estimators, such as the HyperLogLog algorithm;
   - vectors and vector operations like stochastic gradient descent;
   - quantile estimators such as the t-digest
-- Predicates:
+- `Predicates`:
+
   - `Identity law` encoding the notion that a predicate `always returns its input if it succeeds`:
     - For a predicate `p` of type `Predicate[E, A]` and elements `a1` and `a2` of type `A`, if `p(a1) == Success(a2)` then `a1 == a2`
+
+- `CRDTs(Commutative Replicated Data Types)`:
+  - `Consistent`: One approach is to build a system that is `consistent`, meaning that `all machines have the same view of data`. For example, if a user changes their password then `all machines that store a copy of that password must accept the change` `before` we consider the operation to have completed successfully.
+    - disadvantages:
+      - `High latency` because of communication between machines.
+      - `rRelatively low uptime` because outages can cut communications between machines creating a `network partition`.
+  - `Eventually consistent`: `at any particular point in time` machines are allowed to have `differing views of data`. However, if all machines can communicate and there are no further updates they will eventually all have the same view of data.
+    - Low latency and partitioned machines can still accept updates and reconcile its changes when the network is fixed.
+    - `CRDTs` provide one approach to the this reconciliation between machines

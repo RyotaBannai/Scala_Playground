@@ -10,18 +10,23 @@ object KleisliExpr {
   // pipeline.run(20) // List[Int] = List(42, 10, -42, -10, 38, 9, -38, -9)
 }
 
-object ValidationWithKleisili {
+object ValidationWithKleisli {
   import cats.Semigroup
-  import cats.data.{NonEmptyList, Validated}
-  import cats.Semigroup
+  import cats.data.{NonEmptyList, Validated, Kleisli}
   import cats.data.Validated._ // for Valid and Invalid
   import cats.syntax.semigroup._ // for |+|
   import cats.syntax.apply._ // for mapN
   import cats.syntax.validated._ // for valid and invalid
+  import cats.instances.list._
+  import cats.instances.either._ // for Semigroupal
 
   object CaseStudy10Validation {
     sealed trait Predicate[E, A] {
       import Predicate._
+      // add this to return a correct type rather than Validated
+      def run(implicit s: Semigroup[E]): A => Either[E, A] = (a: A) =>
+        this(a).toEither
+
       def apply(a: A)(implicit s: Semigroup[E]): Validated[E, A] =
         this match {
           case Pure(func)       => func(a)
@@ -56,52 +61,61 @@ object ValidationWithKleisili {
       def pure[E, A](f: A => Validated[E, A]): Predicate[E, A] = Pure(f)
     }
 
-    sealed trait Check[E, A, B] {
-      import Check._
-      def apply(in: A)(implicit s: Semigroup[E]): Validated[E, B]
-      def map[C](f: B => C): Check[E, A, C] = Map[E, A, B, C](this, f)
-      def flatMap[C](f: B => Check[E, A, C]) = FlatMap[E, A, B, C](this, f)
-      def andThen[C](next: Check[E, B, C]): Check[E, A, C] =
-        AndThen[E, A, B, C](this, next)
-    } // end of Check class
+    type Errors = NonEmptyList[String]
+    def error(s: String): NonEmptyList[String] = NonEmptyList(s, Nil)
+    type Result[A] = Either[Errors, A]
+    type Check[A, B] = Kleisli[Result, A, B]
+    def check[A, B](fn: A => Result[B]): Check[A, B] = Kleisli(fn)
+    def checkPred[A](pred: Predicate[Errors, A]): Check[A, A] =
+      Kleisli[Result, A, A](pred.run)
 
-    object Check {
-      def apply[E, A](pred: Predicate[E, A]): Check[E, A, A] = PurePredicate(
-        pred
+    // use: these are the same as before.
+    def longerThan(n: Int): Predicate[Errors, String] =
+      Predicate.lift(
+        error(s"Must be longer than $n characters"),
+        str => str.size > n
       )
-      def apply[E, A, B](f: A => Validated[E, B]): Check[E, A, B] = Pure(f)
 
-      final case class Pure[E, A, B](func: A => Validated[E, B])
-          extends Check[E, A, B] {
-        def apply(in: A)(implicit s: Semigroup[E]): Validated[E, B] = func(in)
-      } // end of Pure class
+    val alphanumeric: Predicate[Errors, String] =
+      Predicate.lift(
+        error(s"Must be all alphanumeric characters"),
+        str => str.forall(_.isLetterOrDigit)
+      )
 
-      final case class PurePredicate[E, A](pred: Predicate[E, A])
-          extends Check[E, A, A] {
-        def apply(in: A)(implicit s: Semigroup[E]): Validated[E, A] = pred(in)
-      } // end of PurePredicate class
+    def contains(char: Char): Predicate[Errors, String] =
+      Predicate.lift(
+        error(s"Must contain the character $char"),
+        str => str.contains(char)
+      )
 
-      final case class Map[E, A, B, C](check: Check[E, A, B], func: B => C)
-          extends Check[E, A, C] {
-        def apply(in: A)(implicit s: Semigroup[E]): Validated[E, C] =
-          check(in).map(func)
-      }
+    def containsOnce(char: Char): Predicate[Errors, String] =
+      Predicate.lift(
+        error(s"Must contain the character $char only once"),
+        str => str.filter(c => c == char).size == 1
+      )
 
-      final case class FlatMap[E, A, B, C](
-          check: Check[E, A, B],
-          func: B => Check[E, A, C]
-      ) extends Check[E, A, C] {
-        def apply(in: A)(implicit s: Semigroup[E]): Validated[E, C] =
-          check(in).withEither(_.flatMap(b => func(b)(in).toEither))
-      }
+    val checkUsername: Check[String, String] = checkPred(
+      longerThan(3) and alphanumeric
+    )
+    val splitEmail: Check[String, (String, String)] = check(_.split('@') match {
+      case Array(name, domain) => Right((name, domain))
+      case _                   => Left(error("Must contain a single @ character"))
+    })
 
-      final case class AndThen[E, A, B, C](
-          check1: Check[E, A, B],
-          check2: Check[E, B, C]
-      ) extends Check[E, A, C] {
-        def apply(a: A)(implicit s: Semigroup[E]): Validated[E, C] =
-          check1(a).withEither(_.flatMap(b => check2(b).toEither))
-      }
-    } // end of Check object
-  } // end of ValidationWithKleisili object
+    val checkLeft: Check[String, String] = checkPred(longerThan(0))
+    val checkRight: Check[String, String] = checkPred(
+      longerThan(3) and contains('.')
+    )
+    val joinEmail: Check[(String, String), String] = check { case (l, r) =>
+      (checkLeft(l), checkRight(r)).mapN(_ + "@" + _)
+    }
+
+    val checkEmail: Check[String, String] = splitEmail andThen joinEmail
+
+    final case class User(username: String, email: String)
+
+    def createUser(username: String, email: String): Either[Errors, User] =
+      (checkUsername.run(username), checkEmail.run(email)).mapN(User)
+
+  } // end of ValidationWithKleisli object
 }

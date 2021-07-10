@@ -1,6 +1,5 @@
 import cats.Semigroup
 import cats.data.{NonEmptyList, Validated}
-import cats.Semigroup
 import cats.data.Validated._ // for Valid and Invalid
 import cats.syntax.semigroup._ // for |+|
 import cats.syntax.apply._ // for mapN

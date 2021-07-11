@@ -160,3 +160,10 @@
   - `Eventually consistent`: `at any particular point in time` machines are allowed to have `differing views of data`. However, if all machines can communicate and there are no further updates they will eventually all have the same view of data.
     - Low latency and partitioned machines can still accept updates and reconcile its changes when the network is fixed.
     - `CRDTs` provide one approach to the this reconciliation between machines
+  - `increment`: requires a `monoid`;
+  - `total`: requires a `commutative monoid`;
+  - `merge`: requires an `idempotent commutative monoid`; also called `a bounded smilattice`
+  - Properties:
+    - `commutative`:[changing the order of the operands does not change the result. i.g. `"3 + 4 = 4 + 3" or "2 × 5 = 5 × 2"`](https://en.wikipedia.org/wiki/Commutative_property)
+    - `idempotent`: [one operation has no additional affection when called two or more](https://stackoverflow.com/questions/1077412/what-is-an-idempotent-operation))
+    - `associative`: when three or more numbers are added (or multiplied), the sum (or the product) is the same `regardless of the grouping of the addends`

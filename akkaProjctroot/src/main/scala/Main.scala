@@ -1,0 +1,1 @@
+object MyApp extends App {}

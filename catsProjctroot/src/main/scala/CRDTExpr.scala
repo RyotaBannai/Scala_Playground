@@ -189,6 +189,7 @@ object AbstractOverKVSoreCRDTs {
     }
 
     // ! Map(a -> 9, b -> 8)
+    // :settings -Xprint:typer
     def merge(f1: F[K, V], f2: F[K, V])(implicit m: BoundedSemiLattice[V]): F[K, V] = {
       println("called")
       pprint.pprintln(m.combine(1.asInstanceOf[V], 2.asInstanceOf[V]), width = 5)

@@ -8,6 +8,8 @@ libraryDependencies ++= Seq(
 val AkkaVersion = "2.6.15"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion
+libraryDependencies += "ch.qos.logback"     % "logback-classic"  % "1.2.3"
+
 libraryDependencies ++= Seq("com.lihaoyi" %% "pprint" % "0.5.6")
 
 scalacOptions ++= Seq(

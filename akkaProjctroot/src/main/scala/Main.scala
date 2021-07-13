@@ -44,6 +44,7 @@ object GreeterBot {
     }
 } // end of GreeterBot object
 
+// Guardian actor: bootstraps application.
 object GreeterMain {
 
   /** Message
@@ -54,6 +55,8 @@ object GreeterMain {
     Behaviors.setup { context =>
       val greeter = context.spawn(Greeter(), "greeter")
       Behaviors.receiveMessage { message =>
+        context.log.info("Initialize App..")
+
         val replyTo = context.spawn(GreeterBot(max = 3), message.name)
         greeter ! Greeter.Greet(message.name, replyTo)
         Behaviors.same
@@ -62,6 +65,6 @@ object GreeterMain {
 } // end of Greetermain
 
 object AkkaQuikstart extends App {
-  val greeterMain: ActorSystem[GreeterMain.SayHello] = ActorSystem(GreeterMain(), "AkkaQuickStart")
+  val greeterMain: ActorSystem[SayHello] = ActorSystem(GreeterMain(), "AkkaQuickStart")
   greeterMain ! SayHello("Charles")
 } // end of AkkaQuikstart object

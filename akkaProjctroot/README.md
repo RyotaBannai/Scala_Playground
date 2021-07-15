@@ -8,3 +8,5 @@
   - The recommended pattern is to return `Behaviors.stopped()` inside the actor to stop itself, `usually as a response to some user defined stop message` or `when the actor is done with its job`.
   - `Stopping a child actor`:
     - Technically possible by calling `context.stop(childRef)` `from the parent`, but it’s not possible to stop `arbitrary (non-child) actors` this way.
+- `Failure handling:
+  - The default `supervisor strategy` is `to stop the child`. If you don’t define the strategy `all failures result in a stop`.

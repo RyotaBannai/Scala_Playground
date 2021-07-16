@@ -1,17 +1,18 @@
 ThisBuild / scalaVersion := "2.13.6"
 
+val AkkaVersion       = "2.6.15"
+val ScalaTest: String = "3.2.9"
+
 libraryDependencies ++= Seq(
-  "org.scalactic" %% "scalactic" % "3.2.9",
-  "org.scalatest" %% "scalatest" % "3.2.9" % "test"
+  "org.scalactic"     %% "scalactic"                % ScalaTest,
+  "org.scalatest"     %% "scalatest-wordspec"       % ScalaTest   % "test",
+  "org.scalatest"     %% "scalatest-diagrams"       % ScalaTest   % "test",
+  "org.scalatest"     %% "scalatest-shouldmatchers" % ScalaTest   % "test",
+  "com.typesafe.akka" %% "akka-actor-typed"         % AkkaVersion,
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
+  "ch.qos.logback"     % "logback-classic"          % "1.2.3",
+  "com.lihaoyi"       %% "pprint"                   % "0.5.6"
 )
-
-val AkkaVersion = "2.6.15"
-
-libraryDependencies += "com.typesafe.akka" %% "akka-actor-typed"         % AkkaVersion
-libraryDependencies += "ch.qos.logback"     % "logback-classic"          % "1.2.3"
-libraryDependencies += "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.5.32" % Test
-
-libraryDependencies ++= Seq("com.lihaoyi" %% "pprint" % "0.5.6")
 
 scalacOptions ++= Seq(
   "-Xfatal-warnings"

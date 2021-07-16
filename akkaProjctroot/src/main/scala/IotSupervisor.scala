@@ -50,20 +50,60 @@ object DeviceManager {
   final case class DeviceRegistered(device: ActorRef[Device.Command])
 
   final case class RequestDeviceList(
+      requestId: Long,
       groupId: String,
-      deviceId: String,
       replyTo: ActorRef[ReplyDeviceList]
   ) extends DeviceManager.Command
       with DeviceGroup.Command
 
-  final case class ReplyDeviceList(device: ActorRef[Device.Command])
+  final case class ReplyDeviceList(requestId: Long, ids: Set[String])
 
-}
+  private case class DeviceGroupTerminated(groupId: String) extends DeviceManager.Command
+} // end of DeviceManager object
 
 class DeviceManager(context: ActorContext[DeviceManager.Command])
     extends AbstractBehavior[DeviceManager.Command](context) {
-  override def onMessage(msg: DeviceManager.Command): Behavior[DeviceManager.Command] = ???
-}
+
+  import DeviceManager._
+  var groupIdToActor = Map.empty[String, ActorRef[DeviceGroup.Command]]
+
+  context.log.info("DeviceManager started")
+
+  override def onMessage(msg: DeviceManager.Command): Behavior[DeviceManager.Command] =
+    msg match {
+      case trackMsg @ RequestTrackDevice(groupId, _, replyTo) =>
+        groupIdToActor.get(groupId) match {
+          case Some(ref) => ref ! trackMsg
+          case None =>
+            context.log.info("Creating device group actor for {}", groupId)
+            val groupActor = context.spawn(DeviceGroup(groupId), s"group-$groupId")
+            context.watchWith(groupActor, DeviceGroupTerminated(groupId))
+
+            groupActor ! trackMsg
+            groupIdToActor += groupId -> groupActor
+        }
+        this
+
+      case req @ RequestDeviceList(requestId, groupId, replyTo) =>
+        groupIdToActor.get(groupId) match {
+          case Some(ref) => ref ! req
+          case None =>
+            replyTo ! ReplyDeviceList(requestId, Set.empty)
+        }
+        this
+
+      case DeviceGroupTerminated(groupId) =>
+        context.log.info("Device group actor for {} has been terminated", groupId)
+        groupIdToActor -= groupId
+        this
+    }
+
+  override def onSignal: PartialFunction[Signal, Behavior[Command]] = { case PostStop =>
+    context.log.info("DeviceManager stopped")
+    this
+  }
+
+} // end of DeviceManager class
 
 object DeviceGroup {
   def apply(groupId: String): Behavior[Command] =
@@ -76,7 +116,7 @@ object DeviceGroup {
       groupId: String,
       deviceId: String
   ) extends Command
-}
+} // end of DeviceGroup object
 
 class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
     extends AbstractBehavior[DeviceGroup.Command](context) {
@@ -88,18 +128,22 @@ class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
   context.log.info("DeviceGroup {} started", groupId)
 
   override def onMessage(msg: Command): Behavior[Command] =
-    (msg: @unchecked) match {
+    msg match {
       case trackMsg @ RequestTrackDevice(`groupId`, deviceId, replyTo) =>
         deviceIdToActor.get(deviceId) match {
           case Some(deviceActor) => replyTo ! DeviceRegistered(deviceActor)
           case None =>
             context.log.info("Creating device actor for {}", trackMsg.deviceId)
 
-            val deviceActor = context.spawn(Device(groupId, deviceId), s"device-$deviceId")
+            val deviceActor = context.spawn(Device(`groupId`, deviceId), s"device-$deviceId")
+            // observes actor's termination and sends DeviceTerminated message to myself
+            context.watchWith(deviceActor, DeviceTerminated(deviceActor, groupId, deviceId))
+
             deviceIdToActor += deviceId -> deviceActor
             replyTo ! DeviceRegistered(deviceActor)
         }
         this
+
       case RequestTrackDevice(gId, _, _) =>
         context.log.info2(
           "Ignoring TrackDevice request for {}. This actor is responsible for {}.",
@@ -107,13 +151,26 @@ class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
           groupId
         )
         this
+
+      case RequestDeviceList(requestId, gid, replyTo) =>
+        // if the given gid is the same as mine.
+        if (gid == groupId) {
+          replyTo ! ReplyDeviceList(requestId, deviceIdToActor.keySet)
+          this
+        } else
+          Behaviors.unhandled
+
+      case DeviceTerminated(_, _, deviceId) =>
+        context.log.info("Device actor for {} has been terminated", deviceId)
+        deviceIdToActor -= deviceId
+        this
     }
 
   override def onSignal: PartialFunction[Signal, Behavior[Command]] = { case PostStop =>
     context.log.info("DeviceGroup {} stopped", groupId)
     this
   }
-}
+} // end of DeviceGroup class
 
 object Device {
   def apply(groupId: String, deviceId: String): Behavior[Command] =
@@ -133,6 +190,8 @@ object Device {
   ) extends Command
   // for reply
   final case class TemperatureRecorded(requestId: Long)
+
+  case object Passivate extends Command
 } // end of Device object
 
 class Device(context: ActorContext[Device.Command], groupId: String, deviceId: String)
@@ -154,6 +213,8 @@ class Device(context: ActorContext[Device.Command], groupId: String, deviceId: S
         lastTemperatureReading = Some(value)
         replyTo ! TemperatureRecorded(id)
         this
+
+      case Passivate => Behaviors.stopped
     }
   }
 

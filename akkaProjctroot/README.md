@@ -2,7 +2,7 @@
 
 - `Test`:
   1. `sbt` on console.
-  2. `test` inside sbt repl or `"test:testOnly *YourTestClassName"` if you'd prefer to run single test.
+  2. `test` inside sbt repl or `"Test / testOnly *YourTestClassName"` if you'd prefer to run single test.
 - The Actor’s `mailbox` is essentially `a message queue with ordering semantics`.
   - The order of multiple messages sent from the `same Actor` is `preserved`, but `can be interleaved` with messages sent by `another Actor`.
 - Actor Architecture:
@@ -22,3 +22,5 @@
   - `The top level supervisor actor` represents the system component for devices. It is also the entry point to `look up and create device group and device actors`.
   - At the next level, `group actors` each `supervise the device actors` for one group id (e.g. one home). They also provide services, such as `querying temperature readings` from all of the available devices in their group.
   - `Device actors` manage all `the interactions with the actual device sensors`, such as storing temperature readings.
+- `Death Watch feature`: allows an actor to watch another actor and be notified if the other actor is stopped. Unlike `supervision`, watching is not limited to parent-child relationships, any actor can watch any other actor as long as it knows the `ActorRef`
+  - After a watched actor stops, the watcher receives a `Terminated(actorRef) signal` which also contains the `reference to the watched actor`. The watcher can either handle this message explicitly or will fail with a `DeathPactException`. This latter is useful if the actor can no longer perform its own duties after the watched actor has been stopped. In our case, the group should still function after one device have been stopped, so we need to handle the `Terminated(actorRef) signal`.

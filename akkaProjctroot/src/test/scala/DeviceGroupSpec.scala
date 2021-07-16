@@ -47,6 +47,63 @@ class DeviceGroupSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike {
       res2.value should ===(Some(55.0))
 
     }
-    //#device-read-test
+
+    "be able to list active devices" in {
+      val probe      = createTestProbe[DeviceManager.DeviceRegistered]()
+      val groupActor = spawn(DeviceGroup("group"))
+
+      groupActor ! DeviceManager.RequestTrackDevice("group", "device1", probe.ref)
+      val registered1 = probe.receiveMessage()
+
+      groupActor ! DeviceManager.RequestTrackDevice("group", "device2", probe.ref)
+      val registered2 = probe.receiveMessage()
+
+      val deviceListProbe = createTestProbe[DeviceManager.ReplyDeviceList]()
+      groupActor ! DeviceManager.RequestDeviceList(
+        requestId = 0,
+        groupId = "group",
+        deviceListProbe.ref
+      )
+      deviceListProbe.expectMessage(
+        DeviceManager.ReplyDeviceList(requestId = 0, Set("device1", "device2"))
+      )
+    }
+
+    "be able to list active devices after one shuts down" in {
+      val probe      = createTestProbe[DeviceManager.DeviceRegistered]()
+      val groupActor = spawn(DeviceGroup("group"))
+
+      groupActor ! DeviceManager.RequestTrackDevice("group", "device1", probe.ref)
+      val registered1 = probe.receiveMessage()
+      val toShutDown  = registered1.device
+
+      groupActor ! DeviceManager.RequestTrackDevice("group", "device2", probe.ref)
+      val registered2 = probe.receiveMessage()
+
+      val deviceListProbe = createTestProbe[DeviceManager.ReplyDeviceList]()
+      groupActor ! DeviceManager.RequestDeviceList(
+        requestId = 0,
+        groupId = "group",
+        deviceListProbe.ref
+      )
+      deviceListProbe.expectMessage(
+        DeviceManager.ReplyDeviceList(requestId = 0, Set("device1", "device2"))
+      )
+      // same as "be able to list active devices"
+      toShutDown ! Device.Passivate
+      probe.expectTerminated(toShutDown, probe.remainingOrDefault)
+
+      probe.awaitAssert {
+        // refresh the result for deviceListProbe
+        groupActor ! DeviceManager.RequestDeviceList(
+          requestId = 1,
+          groupId = "group",
+          deviceListProbe.ref
+        )
+        deviceListProbe.expectMessage(
+          DeviceManager.ReplyDeviceList(requestId = 1, Set("device2"))
+        )
+      }
+    }
   }
 }

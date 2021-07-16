@@ -10,6 +10,8 @@ import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.LoggerOps
+import akka.actor.typed.scaladsl.TimerScheduler
+import scala.concurrent.duration.FiniteDuration
 
 object IotSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup[Nothing](context => new IotSupervisor(context))
@@ -20,6 +22,7 @@ class IotSupervisor(context: ActorContext[Nothing]) extends AbstractBehavior[Not
 
   override def onMessage(msg: Nothing): Behavior[Nothing] = {
     // No need to handle any messages
+    val deviceManager = context.spawn(DeviceManager(), "device-manager")
     Behaviors.unhandled
   }
 
@@ -59,7 +62,71 @@ object DeviceManager {
   final case class ReplyDeviceList(requestId: Long, ids: Set[String])
 
   private case class DeviceGroupTerminated(groupId: String) extends DeviceManager.Command
-} // end of DeviceManager object
+
+  /** Response message protocol with respect to a temperature query */
+  final case class RequestAllTemperatures(
+      requestId: Long,
+      groupId: String,
+      replyTo: ActorRef[RespondAllTemperatures]
+  )
+
+  final case class RespondAllTemperatures(
+      requestId: Long,
+      temperatures: Map[String, TemperatureReading]
+  )
+
+  sealed trait TemperatureReading
+  final case class Temperature(value: Double) extends TemperatureReading
+  case object TemperatureNotAvailable         extends TemperatureReading
+  case object DeviceNotAvailable              extends TemperatureReading
+  case object DeviceTimedOut                  extends TemperatureReading
+} // end of object DeviceManager
+
+object DeviceGroupQuery {
+  def apply(
+      deviceIdActor: Map[String, ActorRef[Device.Command]],
+      requestId: Long,
+      requester: ActorRef[DeviceManager.RespondAllTemperatures],
+      timeout: FiniteDuration
+  ) {
+    Behaviors.setup { context =>
+      Behaviors.withTimers { timers =>
+        new DeviceGroupQuery(deviceIdToActor, requestId, requester, timeout, context, timers)
+      }
+    }
+  }
+
+  trait Command
+  private case object CollectionTimeout                                           extends Command
+  final case class WrappedRespondTemperature(response: Device.RespondTemperature) extends Command
+  private final case class DeviceTerminated(deviceId: String)                     extends Command
+} // end of object DeviceGroupQuery
+
+class DeviceGroupQuery(
+    deviceIdActor: Map[String, ActorRef[Device.Command]],
+    requestId: Long,
+    requester: ActorRef[DeviceManager.RespondAllTemperatures],
+    timeout: FiniteDuration,
+    context: ActorContext[DeviceGroupQuery.Command],
+    timers: TimerScheduler[DeviceGroupQuery.Command]
+) extends AbstractBehavior[DeviceGroupQuery.Command](context) {
+  import DeviceGroupQuery._
+  import DevieManaer.DeviceNotAvailable
+  import DevieManaer.DeviceTimedOut
+  import DevieManaer.RespondAllTemperatures
+  import DevieManaer.Temperature
+  import DevieManaer.TemperatureNotAvailable
+  import DevieManaer.TemperatureReading
+
+  timers.startSingleTimer(CollectionTimeout, CollectionTimeout, timeout)
+  private val respondTemperatureAdapter = context.messageAdapter(WrappedRespondTemperature.apply)
+
+  deviceIdActor.foreach { case (deviceId, device) =>
+    context.watchWith(device, DeviceTerminated(deviceId))
+    device ! Device.ReadTemperature(0, respondTemperatureAdapter)
+  }
+
+} // end of class DeviceGroupQuery
 
 class DeviceManager(context: ActorContext[DeviceManager.Command])
     extends AbstractBehavior[DeviceManager.Command](context) {
@@ -103,7 +170,7 @@ class DeviceManager(context: ActorContext[DeviceManager.Command])
     this
   }
 
-} // end of DeviceManager class
+} // end of class DeviceManager
 
 object DeviceGroup {
   def apply(groupId: String): Behavior[Command] =
@@ -116,7 +183,7 @@ object DeviceGroup {
       groupId: String,
       deviceId: String
   ) extends Command
-} // end of DeviceGroup object
+} // end of object DeviceGroup
 
 class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
     extends AbstractBehavior[DeviceGroup.Command](context) {
@@ -170,7 +237,7 @@ class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
     context.log.info("DeviceGroup {} stopped", groupId)
     this
   }
-} // end of DeviceGroup class
+} // end of class DeviceGroup
 
 object Device {
   def apply(groupId: String, deviceId: String): Behavior[Command] =
@@ -192,7 +259,7 @@ object Device {
   final case class TemperatureRecorded(requestId: Long)
 
   case object Passivate extends Command
-} // end of Device object
+} // end of object Device
 
 class Device(context: ActorContext[Device.Command], groupId: String, deviceId: String)
     extends AbstractBehavior[Device.Command](context) {
@@ -222,4 +289,4 @@ class Device(context: ActorContext[Device.Command], groupId: String, deviceId: S
     context.log.info2("Device actor {}-{} stopped", groupId, deviceId)
     this
   }
-} // end of Device class
+} // end of class Device

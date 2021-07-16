@@ -24,3 +24,13 @@
   - `Device actors` manage all `the interactions with the actual device sensors`, such as storing temperature readings.
 - `Death Watch feature`: allows an actor to watch another actor and be notified if the other actor is stopped. Unlike `supervision`, watching is not limited to parent-child relationships, any actor can watch any other actor as long as it knows the `ActorRef`
   - After a watched actor stops, the watcher receives a `Terminated(actorRef) signal` which also contains the `reference to the watched actor`. The watcher can either handle this message explicitly or will fail with a `DeathPactException`. This latter is useful if the actor can no longer perform its own duties after the watched actor has been stopped. In our case, the group should still function after one device have been stopped, so we need to handle the `Terminated(actorRef) signal`.
+- `Dealing with possible scenarios with Iot devices`:
+  - `Scenarios`:
+    - When a query arrives, the group actor takes a `snapshot` of the existing device actors and will only ask those actors for the temperature.
+    - Actors that start up `after` the query arrives are ignored.
+    - If an actor in the `snapshot` stops during the query without answering, we will report the fact that it stopped to teh sender of the query message.
+  - Device actor states with respect to a temperature query:
+    - It has a temperature available: `Temperature`.
+    - It has responded, but has no temperature available yet: `TemperatureNotAvailable`.
+    - It has stopped before answering: `DeviceNotAvailable`.
+    - It did not respond before the deadline: `DeviceTimedOut`.

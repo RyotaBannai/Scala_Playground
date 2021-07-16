@@ -47,8 +47,7 @@ object GreeterBot {
 // Guardian actor: bootstraps application.
 object GreeterMain {
 
-  /** Message
-    */
+  /** Message */
   final case class SayHello(name: String)
 
   def apply(): Behavior[SayHello] =

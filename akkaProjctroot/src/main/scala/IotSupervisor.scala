@@ -42,6 +42,16 @@ object Device {
   final case class ReadTemperature(requestId: Long, replyTo: ActorRef[RespondTemperature])
       extends Command
   final case class RespondTemperature(requestId: Long, value: Option[Double])
+
+  // to receive
+  final case class RecordTemperature(
+      requestId: Long,
+      value: Double,
+      replyTo: ActorRef[TemperatureRecorded]
+  ) extends Command
+  // for reply
+  final case class TemperatureRecorded(requestId: Long)
+
 } // end of Device object
 
 class Device(context: ActorContext[Device.Command], groupId: String, deviceId: String)
@@ -56,6 +66,12 @@ class Device(context: ActorContext[Device.Command], groupId: String, deviceId: S
     msg match {
       case ReadTemperature(id, replyTo) =>
         replyTo ! RespondTemperature(id, lastTemperatureReading)
+        this
+
+      case RecordTemperature(id, value, replyTo) =>
+        context.log.info2("Recorded temperature reading {} with {}", value, id)
+        lastTemperatureReading = Some(value)
+        replyTo ! TemperatureRecorded(id)
         this
     }
   }

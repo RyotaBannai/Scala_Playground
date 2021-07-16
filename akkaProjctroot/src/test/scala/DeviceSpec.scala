@@ -14,7 +14,7 @@ class DeviceSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike {
 
       // first round
       deviceActor ! RecordTemperature(requestId = 1, 24.0, recordProbe.ref)
-      recordProbe.expectMessage(Device.TemperatureRecorded(requestId = 1))
+      recordProbe.expectMessage(TemperatureRecorded(requestId = 1))
 
       deviceActor ! ReadTemperature(requestId = 2, readProbe.ref)
       val res1 = readProbe.receiveMessage()
@@ -23,7 +23,7 @@ class DeviceSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike {
 
       // second round
       deviceActor ! RecordTemperature(requestId = 3, 55.0, recordProbe.ref)
-      recordProbe.expectMessage(Device.TemperatureRecorded(requestId = 3))
+      recordProbe.expectMessage(TemperatureRecorded(requestId = 3))
 
       deviceActor ! ReadTemperature(requestId = 4, readProbe.ref)
       val res2 = readProbe.receiveMessage()

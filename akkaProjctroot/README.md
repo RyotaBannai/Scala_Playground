@@ -1,5 +1,8 @@
 ### Akka notes
 
+- `Test`:
+  1. `sbt` on console.
+  2. `test` inside sbt repl or `"test:testOnly *YourTestClassName"` if you'd prefer to run single test.
 - The Actor’s `mailbox` is essentially `a message queue with ordering semantics`.
   - The order of multiple messages sent from the `same Actor` is `preserved`, but `can be interleaved` with messages sent by `another Actor`.
 - Actor Architecture:
@@ -15,3 +18,7 @@
     - One of them is `the request-respond message pattern`
 - `It can be difficult to determine the definition of the Succuss of Delivery`:
   - `The guarantee of delivery` does not translate to `the domain level guarantee`. We only want to report success once the order has been actually fully processed and persisted. The only entity that can report success is the application itself, since only it has any understanding of the domain guarantees required. `No generalized framework can figure out the specifics of a particular domain and what is considered a success in that domain`.
+- `Device manager hierarchy`: we will model the `device manager component` as an actor tree with three levels:
+  - `The top level supervisor actor` represents the system component for devices. It is also the entry point to `look up and create device group and device actors`.
+  - At the next level, `group actors` each `supervise the device actors` for one group id (e.g. one home). They also provide services, such as `querying temperature readings` from all of the available devices in their group.
+  - `Device actors` manage all `the interactions with the actual device sensors`, such as storing temperature readings.

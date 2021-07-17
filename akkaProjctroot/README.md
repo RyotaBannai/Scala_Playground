@@ -34,3 +34,7 @@
     - It has responded, but has no temperature available yet: `TemperatureNotAvailable`.
     - It has stopped before answering: `DeviceNotAvailable`.
     - It did not respond before the deadline: `DeviceTimedOut`.
+- `ActorContext is not thread safe`, thus
+  - must not accessed by threads from `scala.concurrent.Future` callbacks
+  - must not be shared between several actor instances
+- When the `guardian` actor stops this will stop the `ActorSystem`.

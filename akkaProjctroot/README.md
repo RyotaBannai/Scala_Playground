@@ -38,3 +38,9 @@
   - must not accessed by threads from `scala.concurrent.Future` callbacks
   - must not be shared between several actor instances
 - When the `guardian` actor stops this will stop the `ActorSystem`.
+- `The terminated message is generated independent of the order in which registration and termination occur`:
+  - In particular, the `watching actor(observer)` will receive a `terminated message` even if the `watched actor(observable)` has already been terminated at the time of registration.
+  - `Registering multiple times` does not necessarily lead to multiple messages being generated, but there is `no guarantee` that only exactly one such message is received: if termination of the `watched actor` has generated and queued the message, and another registration is done before this message has been processed, then a second message will be queued, because registering for monitoring of an already terminated actor leads to the immediate generation of the terminated message.
+    - In other words, if you generate a second actor after a first actor has been terminated, then you will get multiple messages.
+  - `Deregister` from watching another actor’s liveliness by using `context.unwatch(target)`:
+    - This works even if `the terminated message` has already been enqueued in the mailbox; after calling `unwatch` no terminated message for that actor will be processed anymore.

@@ -11,7 +11,9 @@ import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.LoggerOps
 import akka.actor.typed.scaladsl.TimerScheduler
+
 import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration._
 
 object IotSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup[Nothing](context => new IotSupervisor(context))
@@ -68,7 +70,8 @@ object DeviceManager {
       requestId: Long,
       groupId: String,
       replyTo: ActorRef[RespondAllTemperatures]
-  )
+  ) extends DeviceManager.Command
+      with DeviceGroup.Command
 
   final case class RespondAllTemperatures(
       requestId: Long,
@@ -206,6 +209,14 @@ class DeviceManager(context: ActorContext[DeviceManager.Command])
         }
         this
 
+      case req @ RequestAllTemperatures(requestId, groupId, replyTo) =>
+        groupIdToActor.get(groupId) match {
+          case Some(ref) => ref ! req
+          case None =>
+            replyTo ! RespondAllTemperatures(requestId, Map.empty)
+        }
+        this
+
       case DeviceGroupTerminated(groupId) =>
         context.log.info("Device group actor for {} has been terminated", groupId)
         groupIdToActor -= groupId
@@ -235,7 +246,13 @@ object DeviceGroup {
 class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
     extends AbstractBehavior[DeviceGroup.Command](context) {
   import DeviceGroup._
-  import DeviceManager.{DeviceRegistered, ReplyDeviceList, RequestTrackDevice, RequestDeviceList}
+  import DeviceManager.{
+    DeviceRegistered,
+    ReplyDeviceList,
+    RequestTrackDevice,
+    RequestDeviceList,
+    RequestAllTemperatures
+  }
 
   private var deviceIdToActor = Map.empty[String, ActorRef[Device.Command]]
 
@@ -266,9 +283,9 @@ class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
         )
         this
 
-      case RequestDeviceList(requestId, gid, replyTo) =>
-        // if the given gid is the same as mine.
-        if (gid == groupId) {
+      case RequestDeviceList(requestId, gId, replyTo) =>
+        // if the given gId is the same as mine.
+        if (gId == groupId) {
           replyTo ! ReplyDeviceList(requestId, deviceIdToActor.keySet)
           this
         } else
@@ -278,6 +295,21 @@ class DeviceGroup(context: ActorContext[DeviceGroup.Command], groupId: String)
         context.log.info("Device actor for {} has been terminated", deviceId)
         deviceIdToActor -= deviceId
         this
+
+      case RequestAllTemperatures(requestId, gId, replyTo) =>
+        // if the given gId is the same as mine.
+        if (gId == groupId) {
+          context.spawnAnonymous(
+            DeviceGroupQuery(
+              deviceIdToActor,
+              requestId = requestId,
+              requester = replyTo,
+              timeout = 3.seconds
+            )
+          )
+          this
+        } else
+          Behaviors.unhandled
     }
 
   override def onSignal: PartialFunction[Signal, Behavior[Command]] = { case PostStop =>

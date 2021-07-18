@@ -51,3 +51,11 @@
     - used when creating `Response` after collecting multiple answers from other actors.
     - it's better to use `ask` if all you need is a single response with a timeout.
     - As the protocol of the session `actor` is not a public API but rather `an implementation detail of the parent actor`, it may not always make sense to have an explicit protocol and adapt the messages of the actors that the session actor interacts with. For this use case it is possible to express that the actor can receive any message (`Any`).
+- `Fault Tolerance`:
+  - When the behavior is restarted the original `Behavior` that was given to `Behaviors.supervise` is re-installed, which means that if it contains `mutable state` it must be a factory via `Behaviors.setup`. When using the object-oriented style with a class extending `AbstractBehavior` it’s always recommended to create it via `Behaviors.setup` as described in [`Behavior factory method`](https://doc.akka.io/docs/akka/current/typed/style-guide.html#behavior-factory-method). For the `function style` there is typically `no need` for the factory if the state is captured in immutable parameters.
+  - `Wrapping behaviors`: with the functional style it is very common to store state by changing behavior. Each returned behavior will be re-wrapped automatically with the supervisor.
+  - `Not recreate child actor when parent stops`:
+    - `supervise` should be placed inside the `setup` and using `SupervisorStrategy.restart.withStopChildren(false)`
+      - That means that the `setup block` will only be run when `the parent actor is first started`, and not when it is restarted.
+  - `PostStop` is not emitted for a restart, so typically you need to handle both `PreRestart` and `PostStop` to cleanup resources.
+  - If the parent in turn does not handle the `Terminated(or ChildFailed)` message it will itself fail with an `akka.actor.typed.DeathPactException`.

@@ -44,3 +44,10 @@
     - In other words, if you generate a second actor after a first actor has been terminated, then you will get multiple messages.
   - `Deregister` from watching another actor’s liveliness by using `context.unwatch(target)`:
     - This works even if `the terminated message` has already been enqueued in the mailbox; after calling `unwatch` no terminated message for that actor will be processed anymore.
+- `Interaction Patterns`:
+  - `Send Future result to self`: means literally `sending the Future result to self`. When the result is `Future`, `onComplete` is a common way to deal with asynchronous process, but in Actor system, doing so is not thread safe. Thus, use this pattern with `pipeToSelf` method.
+    - `pipeToSelf` wraps `Future[result]` to `result`, and send it to self mailbox, so that you doesn't have to handle `Future`.
+  - `Per session child Actor`:
+    - used when creating `Response` after collecting multiple answers from other actors.
+    - it's better to use `ask` if all you need is a single response with a timeout.
+    - As the protocol of the session `actor` is not a public API but rather `an implementation detail of the parent actor`, it may not always make sense to have an explicit protocol and adapt the messages of the actors that the session actor interacts with. For this use case it is possible to express that the actor can receive any message (`Any`).

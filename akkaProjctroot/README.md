@@ -59,3 +59,7 @@
       - That means that the `setup block` will only be run when `the parent actor is first started`, and not when it is restarted.
   - `PostStop` is not emitted for a restart, so typically you need to handle both `PreRestart` and `PostStop` to cleanup resources.
   - If the parent in turn does not handle the `Terminated(or ChildFailed)` message it will itself fail with an `akka.actor.typed.DeathPactException`.
+- `Routers`:
+  - `Pool Router`: is created with `a routee Behavior` and spawns a number of children with that behavior which it will then forward messages to.
+  - If `a child` is stopped the pool router removes it from its set of `routees`. When `the last child` stops `the router itself stops`. To make a resilient router that deals with failures `the routee` Behavior must be `supervised`.
+  - As `actor children` are always local the `routees` are `never spread across a cluster with a pool router`.

@@ -11,11 +11,11 @@ object PingService {
   case object Pong
 
   def apply(): Behavior[Ping] = {
-    Behaviors.setup { context =>
-      context.system.receptionist ! Receptionist.Register(PingServiceKey, context.self)
+    Behaviors.setup { ctx =>
+      ctx.system.receptionist ! Receptionist.Register(PingServiceKey, ctx.self)
 
       Behaviors.receiveMessage { case Ping(replyTo) =>
-        context.log.info("Pinged by {}", replyTo)
+        ctx.log.info("Pinged by {}", replyTo)
 
         replyTo ! Pong
         Behaviors.same
@@ -26,11 +26,11 @@ object PingService {
 
 object Pinger {
   def apply(pingService: ActorRef[PingService.Ping]): Behavior[PingService.Pong.type] = {
-    Behaviors.setup { context =>
-      pingService ! PingService.Ping(context.self)
+    Behaviors.setup { ctx =>
+      pingService ! PingService.Ping(ctx.self)
 
       Behaviors.receiveMessage { _ =>
-        context.log.info("{} was ponged!!", context.self)
+        ctx.log.info("{} was ponged!!", ctx.self)
         Behaviors.stopped
       }
     }
@@ -43,21 +43,21 @@ object Pinger {
 object Guardian {
   def apply(): Behavior[Nothing] = {
     Behaviors
-      .setup[Receptionist.Listing] { context =>
-        context.spawnAnonymous(PingService())
+      .setup[Receptionist.Listing] { ctx =>
+        ctx.spawnAnonymous(PingService())
 
         /** `Receptionist.Subscribe` will send Listing messages to the subscriber,
           * first with the set of entries upon subscription,
           * then whenever the entries for a key are changed.
           */
-        context.system.receptionist ! Receptionist.Subscribe(
+        ctx.system.receptionist ! Receptionist.Subscribe(
           PingService.PingServiceKey,
-          context.self
+          ctx.self
         )
 
         Behaviors.receiveMessagePartial[Receptionist.Listing] {
           case PingService.PingServiceKey.Listing(listings) =>
-            listings.foreach(ps => context.spawnAnonymous(Pinger(ps)))
+            listings.foreach(ps => ctx.spawnAnonymous(Pinger(ps)))
             Behaviors.same
         }
       }
@@ -73,23 +73,23 @@ object PingManager {
   private case class ListingResponse(listing: Receptionist.Listing) extends Command
 
   def apply(): Behavior[Command] = {
-    Behaviors.setup[Command] { context =>
+    Behaviors.setup[Command] { ctx =>
       // converts Receptionist.Listing type to ListingResponse type
-      val listingResponseAdapter = context.messageAdapter[Receptionist.Listing](ListingResponse)
+      val listingResponseAdapter = ctx.messageAdapter[Receptionist.Listing](ListingResponse)
 
-      context.spawnAnonymous(PingService())
+      ctx.spawnAnonymous(PingService())
 
       Behaviors.receiveMessagePartial {
         case PingAll =>
           // Find reply to ActorRef[Receptionist.Listing]
-          context.system.receptionist ! Receptionist.Find(
+          ctx.system.receptionist ! Receptionist.Find(
             PingService.PingServiceKey,
             listingResponseAdapter
           )
           Behaviors.same
 
         case ListingResponse(PingService.PingServiceKey.Listing(listings)) =>
-          listings.foreach(ps => context.spawnAnonymous(Pinger(ps)))
+          listings.foreach(ps => ctx.spawnAnonymous(Pinger(ps)))
           Behaviors.same
       }
     }

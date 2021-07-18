@@ -7,6 +7,8 @@ import akka.util.Timeout
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
+import URIService._
+
 /** Sample of Adapted Response
   * Most often the sending actor does not, and should not, support receiving the response messages of another actor.
   * In such cases we need to provide an ActorRef of the right type and adapt the response message to a type that the sending actor can handle.
@@ -20,6 +22,10 @@ import scala.concurrent.duration._
   *
   * ・A message adapter will be used if the message class matches 'the given class' or 'is a subclass thereof'.
   */
+
+object URIService {
+  final case class URI()
+}
 
 object Backend {
   sealed trait Request
@@ -43,10 +49,11 @@ object FrontEnd {
         context.messageAdapter(rsp => WrappedBackendResponse(rsp))
 
       def active(inProgress: Map[Int, ActorRef[URI]], count: Int): Behavior[Command] = {
-        behaviors.receiveMessage[Command] {
+        Behaviors.receiveMessage[Command] {
           case Translate(site, replyTo) =>
             val taskId = count + 1
             backend ! Backend.StartTranslationJob(taskId, site, backendResponseMapper)
+            active(inProgress updated (taskId, replyTo), taskId)
 
           case wrapped: WrappedBackendResponse =>
             wrapped.response match {

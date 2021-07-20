@@ -64,4 +64,12 @@
   - If `a child` is stopped the pool router removes it from its set of `routees`. When `the last child` stops `the router itself stops`. To make a resilient router that deals with failures `the routee` Behavior must be `supervised`.
   - As `actor children` are always local the `routees` are `never spread across a cluster with a pool router`.
   - `Routing strategies`:
-    - `Round Robin`: rotates over the set of routees making sure that if there are n routees, then for n messages sent through the router, each actor is forwarded one message.
+    - `Round Robin`: rotates over the set of routees making sure that if there are n routees, then for n messages sent through the router, each actor is forwarded one message:
+      - This is `the default for pool routers` as the pool of routees is expected to remain the same.
+      - An optional parameter `preferLocalRoutees` can be used for this strategy. Routers will only use routees located in local actor system if `preferLocalRoutees` is `true` and local routees `do exist`. The default value for this parameter is `false`.
+    - `Random`: Randomly selects a routee when a message is sent through the router.
+      - This is the default for group routers as the group of routees is expected to change as nodes join and leave the cluster.
+      - As `Round Robin` has, `Random` has `preferLocalRoutees` option as well.
+    - `Consistent Hashing`: Uses [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) to select a routee based on the sent message(with the same hash are routed to the same routes). This [article](http://tom-e-white.com/2007/11/consistent-hashing.html) gives good insight into how consistent hashing is implemented.
+  - `Routers and performance`:
+    - Note that if the routees are sharing a resource, `the resource will determine if increasing the number of actors will actually give higher throughput or faster answers`. For example if `the routees are CPU bound actors` it will not give better performance to create more routees than there are threads to execute the actors.

@@ -83,3 +83,10 @@
 - Related behaviors to `Behaviors.unhandled`:
   - `Behaviors.empty`: as next behavior in case you reached a state where you don’t expect messages any more. For instance if an actor only waits until all spawned child actors stopped. Unhandled messages `are still logged` with this behavior.
   - `Behaviors.ignore`: as next behavior in case you don’t care about unhandled messages. All messages sent to an actor with such a behavior are simply dropped and ignored (`without logging`)
+- `Coordinated Shutdown`:
+  - `Most relevant default phases`:
+    - `before-service-unbind`: The first pre-defined phase during shutdown.
+    - `before-cluster-shutdown`: Phase for custom application tasks that are to be run after `service shutdown and before cluster shutdown`.
+    - `before-actor-system-terminate`: Phase for custom application tasks that are to be run `after cluster shutdown and before ActorSystem termination`.
+  - Tasks added to the same phase are executed in `parallel` without any ordering assumptions. Next phase `will not` start until all tasks of previous phase have been completed.
+  - `If tasks are not completed within a configured timeout (see reference.conf) the next phase will be started anyway`. It is possible to configure `recover=off` for a phase `to abort the rest of the shutdown process if a task fails or is not completed within the timeout`.

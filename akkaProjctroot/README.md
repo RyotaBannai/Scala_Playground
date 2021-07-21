@@ -73,3 +73,9 @@
     - `Consistent Hashing`: Uses [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) to select a routee based on the sent message(with the same hash are routed to the same routes). This [article](http://tom-e-white.com/2007/11/consistent-hashing.html) gives good insight into how consistent hashing is implemented.
   - `Routers and performance`:
     - Note that if the routees are sharing a resource, `the resource will determine if increasing the number of actors will actually give higher throughput or faster answers`. For example if `the routees are CPU bound actors` it will not give better performance to create more routees than there are threads to execute the actors.
+- `Stash`:
+  - A typical example when this is useful:
+    - If the actor has to load some initial state or initialize some resources before it can accept the first real message
+    - When the actor is waiting for something to complete before processing the next message
+  - Example:
+    - The `DataAccess` actor is used like `a single access point` to a value stored in a database. When it’s started it loads current state from the database, and while waiting for that initial value `all incoming messages are stashed`.

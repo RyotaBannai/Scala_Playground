@@ -4,7 +4,7 @@ import akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit
 import akka.actor.testkit.typed.scaladsl.LogCapturing
 import org.scalatest.wordspec.AnyWordSpecLike
 
-object StashExpSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike with LogCapturing {
+object StashExprSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike with LogCapturing {
 
   /** sbt "Test / testOnly *StashExprSpec" */
   import scala.concurrent.Future

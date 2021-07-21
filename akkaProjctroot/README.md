@@ -79,3 +79,7 @@
     - When the actor is waiting for something to complete before processing the next message
   - Example:
     - The `DataAccess` actor is used like `a single access point` to a value stored in a database. When it’s started it loads current state from the database, and while waiting for that initial value `all incoming messages are stashed`.
+- [`Finite state machine(FSM or finite-state automaton (FSA, plural: automata), finite automaton, or simply a state machine)`](https://en.wikipedia.org/wiki/Finite-state_machine): An `abstract machine` that can be in exactly one of a finite number of states at any given time.
+- Related behaviors to `Behaviors.unhandled`:
+  - `Behaviors.empty`: as next behavior in case you reached a state where you don’t expect messages any more. For instance if an actor only waits until all spawned child actors stopped. Unhandled messages `are still logged` with this behavior.
+  - `Behaviors.ignore`: as next behavior in case you don’t care about unhandled messages. All messages sent to an actor with such a behavior are simply dropped and ignored (`without logging`)
